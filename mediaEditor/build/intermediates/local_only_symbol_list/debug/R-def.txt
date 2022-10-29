@@ -100,3 +100,4 @@ string thumbnail_reel_video_edit
 string toolbar_title_edit
 string video_crop
 string video_speed
+style AppTheme

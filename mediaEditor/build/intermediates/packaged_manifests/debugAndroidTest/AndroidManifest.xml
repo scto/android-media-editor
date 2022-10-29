@@ -7,7 +7,7 @@
         android:targetSdkVersion="33" />
 
     <instrumentation
-        android:name="androidx.test.runner.AndroidJUnitRunner"
+        android:name="android.test.InstrumentationTestRunner"
         android:functionalTest="false"
         android:handleProfiling="false"
         android:label="Tests for org.pixeldroid.media_editor.test"
@@ -37,7 +37,8 @@
         android:debuggable="true"
         android:extractNativeLibs="false"
         android:label="@string/app_name"
-        android:supportsRtl="true" >
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme" >
         <uses-library android:name="android.test.runner" />
 
         <provider

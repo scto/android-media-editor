@@ -6,4 +6,6 @@
         android:minSdkVersion="23"
         android:targetSdkVersion="33" />
 
+    <application android:theme="@style/AppTheme" />
+
 </manifest>

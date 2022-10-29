@@ -38,4 +38,6 @@
     <string name="toolbar_title_edit">Edit</string>
     <string name="video_crop">Crop video</string>
     <string name="video_speed">Change video speed</string>
+    <style name="AppTheme" parent="Theme.AppCompat">
+    </style>
 </resources>

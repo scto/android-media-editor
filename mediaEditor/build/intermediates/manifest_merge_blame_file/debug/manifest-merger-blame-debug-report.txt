@@ -8,4 +8,8 @@
 7        android:targetSdkVersion="33" />
 7-->/home/artectrex/Projects/mediaEditor/mediaEditor/src/main/AndroidManifest.xml
 8
-9</manifest>
+9    <application android:theme="@style/AppTheme" />
+9-->/home/artectrex/Projects/mediaEditor/mediaEditor/src/main/AndroidManifest.xml:4:5-51
+9-->/home/artectrex/Projects/mediaEditor/mediaEditor/src/main/AndroidManifest.xml:4:18-49
+10
+11</manifest>
