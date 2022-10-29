@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="white">#FFFFFFFF</color>
+    <string name="app_name">Media Editor</string>
+    <string name="busy_dialog_ok_button">OK, wait for that.</string>
+    <string name="busy_dialog_text">Still processing image, wait for that to finish first!</string>
+    <string name="crop_button">Button to crop or rotate the image</string>
+    <string name="crop_result_error">"Couldn't retrieve image after crop"</string>
+    <string name="crop_saved">Crop saved</string>
+    <string name="edit">Edit</string>
+    <string name="error_editing">Error while editing</string>
+    <string name="filter_thumbnail">Thumbnail of filter</string>
+    <string name="image_preview">Preview of the image being edited</string>
+    <string name="lbl_brightness">Brightness</string>
+    <string name="lbl_contrast">Contrast</string>
+    <string name="lbl_saturation">Saturation</string>
+    <string name="mute_video">Mute video</string>
+    <string name="no_cancel_edit">No, cancel edit</string>
+    <string name="normal_filter">Normal</string>
+    <string name="permission_denied">Permission denied</string>
+    <string name="reset_edit_menu">RESET</string>
+    <string name="save_before_returning">Save your edits?</string>
+    <string name="save_crop">Save crop</string>
+    <string name="save_edit_menu">SAVE</string>
+    <string name="save_image_failed">Unable to save image</string>
+    <string name="save_image_success">Image successfully saved</string>
+    <string name="select_video_range">Select what to keep of the video</string>
+    <string name="stabilization_saved">Stabilization saved</string>
+    <string name="stabilize_video">Stabilize video</string>
+    <string name="stabilize_video_intensity">Change intensity of stabilization</string>
+    <string name="tab_filters">Filters</string>
+    <string name="thumbnail_reel_video_edit">Reel showing thumbnails of the video you are editing</string>
+    <string name="toolbar_title_edit">Edit</string>
+    <string name="video_crop">Crop video</string>
+    <string name="video_speed">Change video speed</string>
+</resources>
