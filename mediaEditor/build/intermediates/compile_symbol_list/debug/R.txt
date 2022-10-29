@@ -67,7 +67,6 @@ int layout fragment_edit_image 0x0
 int layout fragment_filter_list 0x0
 int layout thumbnail_list_item 0x0
 int menu edit_menu 0x0
-int string app_name 0x0
 int string busy_dialog_ok_button 0x0
 int string busy_dialog_text 0x0
 int string crop_button 0x0

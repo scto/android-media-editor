@@ -7,7 +7,6 @@
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="white">#FFFFFFFF</color>
-    <string name="app_name">Media Editor</string>
     <string name="busy_dialog_ok_button">OK, wait for that.</string>
     <string name="busy_dialog_text">Still processing image, wait for that to finish first!</string>
     <string name="crop_button">Button to crop or rotate the image</string>

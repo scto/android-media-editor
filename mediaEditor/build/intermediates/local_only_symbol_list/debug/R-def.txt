@@ -69,7 +69,6 @@ layout fragment_edit_image
 layout fragment_filter_list
 layout thumbnail_list_item
 menu edit_menu
-string app_name
 string busy_dialog_ok_button
 string busy_dialog_text
 string crop_button
