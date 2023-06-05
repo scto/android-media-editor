@@ -1,0 +1,125 @@
+package org.editapp
+
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
+import kotlinx.coroutines.launch
+import org.editapp.databinding.FragmentFirstBinding
+import org.pixeldroid.media_editor.photoEdit.PhotoEditActivity
+import org.pixeldroid.media_editor.photoEdit.VideoEditActivity
+
+
+/**
+ * A simple [Fragment] subclass as the default destination in the navigation.
+ */
+class ChooseFileFragment : Fragment() {
+
+    private var _binding: FragmentFirstBinding? = null
+
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
+
+    private lateinit var model: EditViewModel
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentFirstBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    private val createVideoContract =
+        registerForActivityResult(ActivityResultContracts.CreateDocument("video/*")) { newFileUri ->
+            // Save actualFileUri somewhere so the file can be moved there after encoding
+            if (newFileUri != null) {
+                model.encodeVideoTo(newFileUri)
+            } else {
+                //TODO error
+            }
+        }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val _model: EditViewModel by activityViewModels {
+            EditViewModelFactory(
+                requireActivity().application,
+            )
+        }
+        model = _model
+
+        binding.buttonFirst.setOnClickListener {
+            // Launch the photo picker and let the user choose images and videos.
+            pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo))
+        }
+
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                model.uiState.collect { uiState ->
+                    uiState.uriToEdit?.let {
+                        val type = uiState.type
+                        val isVideo = type?.startsWith("video/")
+
+                        val intent = Intent(context,
+                            if(isVideo == true) VideoEditActivity::class.java else PhotoEditActivity::class.java
+                        )
+                            .putExtra(PhotoEditActivity.PICTURE_URI, it)
+                            .putExtra(PhotoEditActivity.PICTURE_POSITION, 0)
+                            .putExtra(PhotoEditActivity.SAVE_TO_NEW_FILE, true)
+
+                        editResultContract.launch(intent)
+                        model.launchedEdit()
+                    }
+                    if (uiState.fragment == 2) findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+                    if (uiState.startVideoEncoding) {
+                        val prefillFileName = uiState.type?.takeLastWhile { it != '/' }?.let {
+                            "edited.$it"
+                        } ?: ""
+                        createVideoContract.launch(prefillFileName)
+                        model.launchedVideoCreation()
+                    }
+                }
+            }
+        }
+    }
+
+    private val editResultContract: ActivityResultLauncher<Intent> = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()){
+            result: ActivityResult? ->
+        if (result?.resultCode == Activity.RESULT_OK && result.data != null) {
+            // The edit returned successfully, you can get the results from the intent data:
+            model.editResult(result.data!!)
+        } else if(result?.resultCode != Activity.RESULT_CANCELED){
+            Toast.makeText(requireContext(), "Error while editing", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    // Registers a photo picker activity launcher in single-select mode.
+    private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri: Uri? ->
+        // Callback is invoked after the user selects a media item or closes the photo picker.
+        // Use url in callback to give it in Intent to edit activity
+        model.filePickResult(uri)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+}
