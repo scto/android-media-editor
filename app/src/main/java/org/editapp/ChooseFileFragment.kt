@@ -19,7 +19,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import kotlinx.coroutines.launch
-import org.editapp.databinding.FragmentFirstBinding
+import org.editapp.databinding.FragmentChooseFileBinding
 import org.pixeldroid.media_editor.photoEdit.PhotoEditActivity
 import org.pixeldroid.media_editor.photoEdit.VideoEditActivity
 
@@ -29,7 +29,7 @@ import org.pixeldroid.media_editor.photoEdit.VideoEditActivity
  */
 class ChooseFileFragment : Fragment() {
 
-    private var _binding: FragmentFirstBinding? = null
+    private var _binding: FragmentChooseFileBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -41,7 +41,7 @@ class ChooseFileFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentFirstBinding.inflate(inflater, container, false)
+        _binding = FragmentChooseFileBinding.inflate(inflater, container, false)
         return binding.root
     }
 

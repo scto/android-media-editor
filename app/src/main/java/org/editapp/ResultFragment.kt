@@ -12,14 +12,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import kotlinx.coroutines.launch
-import org.editapp.databinding.FragmentSecondBinding
+import org.editapp.databinding.FragmentResultsBinding
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
  */
 class ResultFragment : Fragment() {
 
-    private var _binding: FragmentSecondBinding? = null
+    private var _binding: FragmentResultsBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -32,7 +32,7 @@ class ResultFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        _binding = FragmentSecondBinding.inflate(inflater, container, false)
+        _binding = FragmentResultsBinding.inflate(inflater, container, false)
         return binding.root
 
     }
