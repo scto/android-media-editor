@@ -1,18 +1,20 @@
 package org.editapp
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.view.Menu
+import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.core.view.WindowCompat
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
-import android.view.Menu
-import android.view.MenuItem
-import androidx.activity.viewModels
 import org.editapp.databinding.ActivityMainBinding
+import org.pixeldroid.common.AboutActivity
+import org.pixeldroid.common.ThemedActivity
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : ThemedActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
@@ -25,6 +27,8 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setSupportActionBar(binding.topBar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         appBarConfiguration = AppBarConfiguration(navController.graph)
@@ -50,7 +54,19 @@ class MainActivity : AppCompatActivity() {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
-            R.id.action_settings -> true
+            R.id.action_about -> {
+                val intent = Intent(this, AboutActivity::class.java)
+                intent.putExtra("buildVersion", getString(R.string.versionName))
+                intent.putExtra("appName", getString(R.string.app_name))
+                intent.putExtra("aboutAppDescription", getString(R.string.license_info))
+                //TODO change drawable to nice logo?
+                intent.putExtra("appImage", "ic_launcher_foreground")
+                intent.putExtra("website", getString(R.string.project_website))
+                intent.putExtra("translatePlatformUrl", "https://weblate.pixeldroid.org")
+                intent.putExtra("contributeForgeUrl", "https://gitlab.shinice.net/pixeldroid/PixelDroid")
+                startActivity(intent)
+                true
+            }
             android.R.id.home -> {
                 model.goToFirstFragment()
                 true
