@@ -11,14 +11,14 @@ android {
         // Might be possible to lower this
         minSdk 23
         targetSdk 34
-        versionCode 3
-        versionName "1.5"
     }
 
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        staging {
         }
     }
     compileOptions {
@@ -55,5 +55,6 @@ dependencies {
     implementation('com.github.bumptech.glide:glide:4.16.0') {
         exclude group: "com.android.support"
     }
+    implementation 'androidx.graphics:graphics-core:1.0.0-beta01'
 
 }

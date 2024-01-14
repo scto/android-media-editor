@@ -14,6 +14,7 @@
             android:name="org.pixeldroid.media_editor.photoEdit.VideoEditActivity"
             android:exported="false"/>
         <activity android:name="org.pixeldroid.media_editor.photoEdit.PhotoEditActivity" />
+        <activity android:name="org.pixeldroid.media_editor.photoEdit.imageProcessor.ImageProcessorActivity" />
 
     </application>
 </manifest>
