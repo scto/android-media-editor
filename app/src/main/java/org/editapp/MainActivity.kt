@@ -59,7 +59,6 @@ class MainActivity : ThemedActivity() {
                 intent.putExtra("buildVersion", getString(R.string.versionName))
                 intent.putExtra("appName", getString(R.string.app_name))
                 intent.putExtra("aboutAppDescription", getString(R.string.license_info))
-                //TODO change drawable to nice logo?
                 intent.putExtra("appImage", "mascot")
                 intent.putExtra("website", getString(R.string.project_website))
                 intent.putExtra("translatePlatformUrl", "https://weblate.pixeldroid.org")
