@@ -2,14 +2,13 @@ package org.pixeldroid.media_editor.photoEdit.imagine.layers
 
 import org.pixeldroid.media_editor.photoEdit.imagine.core.types.ImagineLayer
 
-class ContrastLayer: ImagineLayer(initialIntensity = 0f) {
+class NegativeLayer: ImagineLayer(initialIntensity = 1f) {
 
-    override val name : String = "Contrast"
+    override val name : String = "Negative"
 
     override val source: String = """
         vec4 process(vec4 color, sampler2D uImage, vec2 vTexCoords) {
-            vec3 contrasted = (color.rgb - vec3(0.5)) * 2.0 + vec3(0.5);
-            return vec4(contrasted, color.a);
+            return vec4(vec3(1,1,1) - color.rgb, color.a);
         }
     """.trimIndent()
 }

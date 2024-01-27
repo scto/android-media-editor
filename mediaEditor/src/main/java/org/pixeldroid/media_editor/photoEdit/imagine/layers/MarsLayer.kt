@@ -2,15 +2,12 @@ package org.pixeldroid.media_editor.photoEdit.imagine.layers
 
 import org.pixeldroid.media_editor.photoEdit.imagine.core.types.ImagineLayer
 
-class SaturationLayer: ImagineLayer(initialIntensity = 0f) {
+class MarsLayer: ImagineLayer(initialIntensity = 1f) {
 
-    override val name : String = "Saturation"
-
-    // Inspired by https://docs.rainmeter.net/tips/colormatrix-guide/
-    // and https://www.shadertoy.com/view/XdcXzn
+    override val name : String = "Mars"
     override val source: String = """
         vec4 process(vec4 color, sampler2D uImage, vec2 vTexCoords) {
-            float saturation = 2.0;
+            float saturation = 1.5;
             vec3 luminance = vec3(0.3086, 0.6094, 0.0820);
             float oneMinusSat = 1.0 - saturation;
 
@@ -21,10 +18,14 @@ class SaturationLayer: ImagineLayer(initialIntensity = 0f) {
             green += vec3(0, saturation, 0);
             blue += vec3(0, 0, saturation);
 
-            return mat4(red,     0,
+            vec4 sat = mat4(red,     0,
                         green,   0,
                         blue,    0,
                         0, 0, 0, 1) * color;
+        
+            vec3 res = (sat.rgb - vec3(0.5)) * 1.5 + vec3(0.5);
+            return vec4(res, color.a);            
         }
     """.trimIndent()
+
 }
