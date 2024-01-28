@@ -2,9 +2,9 @@ package org.pixeldroid.media_editor.photoEdit.imagine.layers
 
 import org.pixeldroid.media_editor.photoEdit.imagine.core.types.ImagineLayer
 
-class TestLayer: ImagineLayer(initialIntensity = 1f) {
+class ElsaLayer: ImagineLayer(initialIntensity = 1f) {
 
-    override val name : String = "Test"
+    override val name : String = "Elsa"
 
     // Inspired by https://github.com/yulu/Instagram_Filter/blob/master/res/raw/hudson_filter_shader.glsl
     override val source: String = """
@@ -16,11 +16,18 @@ class TestLayer: ImagineLayer(initialIntensity = 1f) {
             float luminance = dot(color.rgb, W);
             vec3 gray = vec3(luminance);
             
-            vec3 brtColor = mix(black, color.rgb, 1.1);
+            // Regulate brightness, contrast and saturation
+            vec3 brtColor = mix(black, color.rgb, 1.0);
             vec3 conColor = mix(middle, brtColor, 1.2);
             vec3 satColor = mix(gray, conColor, 1.2);
-             
-            return vec4(satColor, color.a);            
+            
+            // Vignette
+            float bl = 0.2;   
+            float dist = distance(vTexCoords, vec2(0.5, 0.5)) + bl;
+            float falloff = 0.5;
+            float amount = 0.2;
+            satColor *= smoothstep(0.8, falloff * 0.8, dist * (amount + falloff));
+            return vec4(mix(satColor, color.rgb, bl), color.a);               
         }
     """.trimIndent()
 
