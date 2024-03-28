@@ -1,0 +1,8 @@
+Bunny is a free (as in freedom) Android media editor, letting you edit images and videos on your phone
+
+It lets you open an existing image or video and modify it.
+
+• Images: apply filters, crop, rotate, change brightness/contrast/saturation
+• Videos: crop, change speed, mute audio, stabilize, remove start or end of the video.
+• Dark and light themes
+• 100% Free and Open Source software. No proprietary dependencies.
