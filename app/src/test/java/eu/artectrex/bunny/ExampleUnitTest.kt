@@ -1,4 +1,4 @@
-package org.editapp
+package eu.artectrex.bunny
 
 import org.junit.Test
 

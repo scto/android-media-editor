@@ -1,4 +1,4 @@
-package org.editapp
+package eu.artectrex.bunny
 
 import android.app.Activity
 import android.content.Intent
@@ -19,10 +19,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import kotlinx.coroutines.launch
-import org.editapp.databinding.FragmentChooseFileBinding
+import eu.artectrex.bunny.databinding.FragmentChooseFileBinding
+import org.pixeldroid.media_editor.common.PICTURE_POSITION
+import org.pixeldroid.media_editor.common.PICTURE_URI
 import org.pixeldroid.media_editor.photoEdit.PhotoEditActivity
-import org.pixeldroid.media_editor.photoEdit.VideoEditActivity
-
+import org.pixeldroid.media_editor.photoEdit.PhotoEditActivity.Companion.SAVE_TO_NEW_FILE
+import org.pixeldroid.media_editor.videoEdit.VideoEditActivity
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -80,9 +82,9 @@ class ChooseFileFragment : Fragment() {
                         val intent = Intent(context,
                             if(isVideo == true) VideoEditActivity::class.java else PhotoEditActivity::class.java
                         )
-                            .putExtra(PhotoEditActivity.PICTURE_URI, it)
-                            .putExtra(PhotoEditActivity.PICTURE_POSITION, 0)
-                            .putExtra(PhotoEditActivity.SAVE_TO_NEW_FILE, true)
+                            .putExtra(PICTURE_URI, it)
+                            .putExtra(PICTURE_POSITION, 0)
+                            .putExtra(SAVE_TO_NEW_FILE, true)
 
                         editResultContract.launch(intent)
                         model.launchedEdit()

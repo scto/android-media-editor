@@ -1,4 +1,4 @@
-package org.editapp
+package eu.artectrex.bunny
 
 import android.app.Application
 import android.content.ContentResolver
@@ -13,8 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-import org.pixeldroid.media_editor.photoEdit.PhotoEditActivity
-import org.pixeldroid.media_editor.photoEdit.VideoEditActivity
+import org.pixeldroid.media_editor.videoEdit.VideoEditActivity
 import java.io.File
 import java.util.Locale
 

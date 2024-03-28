@@ -1,4 +1,4 @@
-package org.editapp
+package eu.artectrex.bunny
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,7 +10,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
-import org.editapp.databinding.ActivityMainBinding
+import eu.artectrex.bunny.databinding.ActivityMainBinding
 import org.pixeldroid.common.AboutActivity
 import org.pixeldroid.common.ThemedActivity
 
@@ -60,9 +60,10 @@ class MainActivity : ThemedActivity() {
                 intent.putExtra("appName", getString(R.string.app_name))
                 intent.putExtra("aboutAppDescription", getString(R.string.license_info))
                 intent.putExtra("appImage", "mascot")
+                intent.putExtra("appImageTopMargin", 10)
                 intent.putExtra("website", getString(R.string.project_website))
                 intent.putExtra("translatePlatformUrl", "https://weblate.pixeldroid.org")
-                intent.putExtra("contributeForgeUrl", "https://gitlab.shinice.net/pixeldroid/PixelDroid")
+                intent.putExtra("contributeForgeUrl", "https://gitlab.shinice.net/pixeldroid/bunny")
                 startActivity(intent)
                 true
             }

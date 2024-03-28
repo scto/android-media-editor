@@ -11,15 +11,8 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven { url 'https://jitpack.io' }
-        jcenter {
-            content {
-                // info.androidhive:imagefilters is only available in JCenter
-                includeGroup("info.androidhive")
-            }
-        }
-
     }
 }
-rootProject.name = "Edit app"
+rootProject.name = "Bunny Media Editor"
 include ':app'
 include ':pixel_common'
