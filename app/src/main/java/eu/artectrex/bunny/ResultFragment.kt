@@ -1,4 +1,4 @@
-package org.editapp
+package eu.artectrex.bunny
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,7 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import kotlinx.coroutines.launch
-import org.editapp.databinding.FragmentResultsBinding
+import eu.artectrex.bunny.databinding.FragmentResultsBinding
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.

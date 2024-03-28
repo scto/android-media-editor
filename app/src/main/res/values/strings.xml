@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">Edit app</string>
-    <string name="license_info">Edit app is free and open source software, licensed under the GNU General Public License (version 3 or later)</string>
-    <string name="project_website">https://pixeldroid.org/editApp</string>
+    <string name="app_name">Bunny Media Editor</string>
+    <string name="license_info">Bunny Media Editor is free and open source software, licensed under the GNU General Public License (version 3 or later)</string>
+    <string name="project_website">https://pixeldroid.org/bunny</string>
     <!-- Strings used for fragments for navigation -->
     <string name="choose_file_fragment_label">Choose media to edit</string>
     <string name="second_fragment_label">Result</string>
