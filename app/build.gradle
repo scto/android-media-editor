@@ -88,7 +88,17 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment-ktx:2.7.7'
     implementation 'androidx.navigation:navigation-ui-ktx:2.7.7'
 
-    implementation 'org.pixeldroid.pixeldroid:android-media-editor:3.0'
+    implementation 'org.pixeldroid.pixeldroid:android-media-editor:3.1'
+    /* When using local gradle repo, use these three instead of the combined one on the line above:
+    implementation('org.pixeldroid.pixeldroid:common:testing'){
+        setChanging(true)
+    }
+    implementation('org.pixeldroid.pixeldroid:videoEditor:testing'){
+        setChanging(true)
+    }
+    implementation('org.pixeldroid.pixeldroid:photoEditor:testing'){
+        setChanging(true)
+    }*/
     implementation project(path: ':pixel_common')
 
     testImplementation 'junit:junit:4.13.2'

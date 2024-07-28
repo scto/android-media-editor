@@ -91,6 +91,7 @@ class ChooseFileFragment : Fragment() {
                     }
                     if (uiState.fragment == 2) findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
                     if (uiState.startVideoEncoding) {
+                        //TODO re-use filename from original file here?
                         val prefillFileName = uiState.type?.takeLastWhile { it != '/' }?.let {
                             "edited.$it"
                         } ?: ""
