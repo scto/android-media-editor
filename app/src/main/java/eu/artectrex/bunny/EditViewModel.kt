@@ -8,8 +8,9 @@ import android.net.Uri
 import android.util.Log
 import android.webkit.MimeTypeMap
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -32,6 +33,7 @@ data class EditFlowUiState(
 
 class EditViewModel(
     application: Application,
+    state: SavedStateHandle,
 ) : AndroidViewModel(application) {
 
     private val _uiState: MutableStateFlow<EditFlowUiState> = MutableStateFlow(EditFlowUiState())
@@ -45,6 +47,14 @@ class EditViewModel(
 
     // Keep track of temporary files to delete them (avoids filling cache super fast with videos)
     private val tempFiles: java.util.ArrayList<File> = java.util.ArrayList()
+
+    init {
+        // Get Uri from state - passed through to the ViewModel from the Intent
+        val uri: Uri? = state[Intent.EXTRA_STREAM]
+        uri?.let {
+            filePickResult(it)
+        }
+    }
 
     fun editResult(data: Intent) {
         // If you edited a video:
@@ -186,8 +196,12 @@ class EditViewModel(
     }
 }
 
-class EditViewModelFactory(private val application: Application) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return modelClass.getConstructor(Application::class.java).newInstance(application)
+class EditViewModelFactory(private val application: Application) :
+    AbstractSavedStateViewModelFactory() {
+    override fun <T : ViewModel> create(
+        key: String, modelClass: Class<T>, handle: SavedStateHandle
+    ): T {
+        return modelClass.getConstructor(Application::class.java, SavedStateHandle::class.java)
+            .newInstance(application, handle)
     }
 }
