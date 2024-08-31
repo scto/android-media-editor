@@ -27,8 +27,8 @@ android {
         applicationId 'eu.artectrex.bunny'
         minSdk 21
         targetSdk 34
-        versionCode 2
-        versionName "2.0"
+        versionCode 3
+        versionName "3.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -88,7 +88,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment-ktx:2.7.7'
     implementation 'androidx.navigation:navigation-ui-ktx:2.7.7'
 
-    implementation 'org.pixeldroid.pixeldroid:android-media-editor:3.1'
+    implementation 'org.pixeldroid.pixeldroid:android-media-editor:4.0'
     /* When using local gradle repo, use these three instead of the combined one on the line above:
     implementation('org.pixeldroid.pixeldroid:common:testing'){
         setChanging(true)
