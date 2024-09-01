@@ -18,12 +18,13 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import kotlinx.coroutines.launch
 import eu.artectrex.bunny.databinding.FragmentChooseFileBinding
+import kotlinx.coroutines.launch
 import org.pixeldroid.media_editor.common.PICTURE_POSITION
 import org.pixeldroid.media_editor.common.PICTURE_URI
 import org.pixeldroid.media_editor.photoEdit.PhotoEditActivity
 import org.pixeldroid.media_editor.photoEdit.PhotoEditActivity.Companion.SAVE_TO_NEW_FILE
+import org.pixeldroid.media_editor.photoEdit.ui.main.CollageActivity
 import org.pixeldroid.media_editor.videoEdit.VideoEditActivity
 
 /**
@@ -70,6 +71,12 @@ class ChooseFileFragment : Fragment() {
         binding.buttonFirst.setOnClickListener {
             // Launch the photo picker and let the user choose images and videos.
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo))
+        }
+        binding.buttonCollage.setOnClickListener {
+            val intent = Intent(context, CollageActivity::class.java)
+
+            editResultContract.launch(intent)
+            model.launchedEdit()
         }
 
         lifecycleScope.launch {
