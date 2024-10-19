@@ -27,8 +27,8 @@ android {
         applicationId 'eu.artectrex.bunny'
         minSdk 21
         targetSdk 34
-        versionCode 4
-        versionName "4.0"
+        versionCode 5
+        versionName "4.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -85,10 +85,10 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.7.0'
     implementation 'com.google.android.material:material:1.12.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.7.7'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.7.7'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.8.3'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.8.3'
 
-    implementation 'org.pixeldroid.pixeldroid:android-media-editor:4.1'
+    implementation 'org.pixeldroid.pixeldroid:android-media-editor:4.2'
     /* When using local gradle repo, use these three instead of the combined one on the line above:
     implementation('org.pixeldroid.pixeldroid:common:testing'){
         setChanging(true)
