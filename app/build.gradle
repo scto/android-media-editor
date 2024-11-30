@@ -21,12 +21,12 @@ android.applicationVariants.configureEach { variant ->
 
 android {
     namespace 'eu.artectrex.bunny'
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         applicationId 'eu.artectrex.bunny'
         minSdk 21
-        targetSdk 34
+        targetSdk 35
         versionCode 5
         versionName "4.1"
 
@@ -76,19 +76,19 @@ android {
         variant.resValue "string", "versionName", variant.versionName
     }
 }
-configurations.all {
+configurations.configureEach {
     resolutionStrategy.cacheDynamicVersionsFor 5, 'seconds'
 }
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.13.1'
+    implementation 'androidx.core:core-ktx:1.15.0'
     implementation 'androidx.appcompat:appcompat:1.7.0'
     implementation 'com.google.android.material:material:1.12.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.8.3'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.8.3'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.8.4'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.8.4'
 
-    implementation 'org.pixeldroid.pixeldroid:android-media-editor:4.2'
+    implementation 'org.pixeldroid.pixeldroid:android-media-editor:4.3'
     /* When using local gradle repo, use these three instead of the combined one on the line above:
     implementation('org.pixeldroid.pixeldroid:common:testing'){
         setChanging(true)
