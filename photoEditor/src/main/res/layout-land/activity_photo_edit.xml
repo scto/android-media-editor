@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/colorSecondaryContainer"
-            android:minHeight="?attr/actionBarSize"
+            android:minHeight="?android:attr/actionBarSize"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -27,19 +27,17 @@
 
         <org.pixeldroid.media_editor.photoEdit.imagine.core.ImagineView
             android:id="@+id/image_preview"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="0dp"
             android:contentDescription="@string/image_preview"
-            android:scaleType="centerInside"
-            app:layout_constraintBottom_toBottomOf="@id/bottom_guideline"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/bottom_guideline"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/top_bar"
-            app:layout_constraintVertical_bias="0.7" />
+            app:layout_constraintTop_toBottomOf="@id/top_bar" />
 
         <org.pixeldroid.media_editor.photoEdit.DrawingView
             android:id="@+id/drawingView"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@android:color/transparent"
             android:translationZ="2dp"
@@ -50,35 +48,33 @@
 
         <FrameLayout
             android:id="@+id/frameLayout"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@android:color/transparent"
             android:translationZ="3dp"
-            app:layout_constraintBottom_toBottomOf="@id/image_preview"
-            app:layout_constraintEnd_toEndOf="@id/image_preview"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/image_preview"
             app:layout_constraintStart_toStartOf="@id/image_preview"
             app:layout_constraintTop_toTopOf="@id/image_preview" />
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/viewPager"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             app:layout_constraintBottom_toTopOf="@id/tabs"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/image_preview"
-            app:layout_constraintVertical_bias="0.22" />
+            app:layout_constraintStart_toEndOf="@id/image_preview"
+            app:layout_constraintTop_toBottomOf="@id/top_bar" />
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/image_preview"
             app:layout_constraintTop_toBottomOf="@id/viewPager"
-            app:layout_constraintVertical_bias="0.08"
             app:tabGravity="fill"
             app:tabMode="fixed" />
 
@@ -97,7 +93,7 @@
             android:id="@+id/bottom_guideline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             app:layout_constraintGuide_percent=".7" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
