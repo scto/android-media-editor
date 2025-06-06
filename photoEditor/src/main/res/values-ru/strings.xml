@@ -17,7 +17,7 @@
     <string name="no_changes_save">В изображение не внесено изменений. Сохранить копию?</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
-    <string name="filterBlackAndWhite">Ч/Б</string>
+    <string name="filterBlackAndWhite"><![CDATA[Ч/Б]]></string>
     <string name="filterElsa">Эльза</string>
     <string name="filterFrost">Мороз</string>
     <string name="filterMars">Марс</string>
@@ -43,4 +43,5 @@
     <string name="text_to_add_to_image">Текст для добавления на изображение</string>
     <string name="choose_collage_format">Выберите формат коллажа</string>
     <string name="choose_the_images">Выберите изображения</string>
+    <string name="crop">Обрезать</string>
 </resources>

@@ -14,4 +14,23 @@
     <string name="save_image_failed">Não foi possível guardar imagem</string>
     <string name="save_image_success">Imagem guardada com sucesso</string>
     <string name="crop_button">Botão para cortar ou rotacionar a imagem</string>
+    <string name="add_text">Adicionar texto</string>
+    <string name="stickers">Adicionar adesivos</string>
+    <string name="sliders">Controles deslizantes</string>
+    <string name="text_to_add_to_image">Texto para adicionar à imagem</string>
+    <string name="choose_collage_format">Escolha o formato da colagem</string>
+    <string name="choose_the_images">Escolha as imagens</string>
+    <string name="yes">Sim</string>
+    <string name="no">Não</string>
+    <string name="create_custom_filter">Criar filtro personalizado</string>
+    <string name="edit_custom_filter">Editar filtro personalizado</string>
+    <string name="view_filter">Ver código do filtro</string>
+    <string name="custom_filter">Filtro personalizado</string>
+    <string name="delete">Apagar</string>
+    <string name="shader_code">Código de shader</string>
+    <string name="title_of_the_filter">Título do filtro</string>
+    <string name="view_log">Ver log</string>
+    <string name="filter_error">Erro ao compilar o shader</string>
+    <string name="crop">Cortar</string>
+    <string name="no_changes_save">Nenhuma alteração foi feita na imagem. Salvar uma cópia?</string>
 </resources>

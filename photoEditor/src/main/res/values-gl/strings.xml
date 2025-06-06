@@ -35,4 +35,10 @@
     <string name="filterSepia">Sepia</string>
     <string name="filterVignette">Viñeta</string>
     <string name="filterVintage">Antiga</string>
+    <string name="stickers">Engadir adhesivos</string>
+    <string name="sliders">Regletas</string>
+    <string name="choose_the_images">Elixe as imaxes</string>
+    <string name="add_text">Engadir texto</string>
+    <string name="text_to_add_to_image">Texto para engadir na imaxe</string>
+    <string name="choose_collage_format">Elixe o formato para o mosaico</string>
 </resources>

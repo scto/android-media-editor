@@ -1,2 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="edit">Redaguoti</string>
+    <string name="filterBlackAndWhite"><![CDATA[J ir B]]></string>
+    <string name="lbl_brightness">Skaistis</string>
+    <string name="lbl_contrast">Kontrastas</string>
+    <string name="lbl_saturation">Grynis</string>
+    <string name="tab_filters">Filtrai</string>
+    <string name="filter_thumbnail">Filtro miniatiūra</string>
+    <string name="normal_filter">Įprastas</string>
+    <string name="filterElsa">Elza</string>
+    <string name="filterFrost">Šaltis</string>
+    <string name="filterMars">Marsas</string>
+    <string name="filterNegative">Neigiamas</string>
+    <string name="filterRand">Rendas</string>
+    <string name="filterSepia">Sepija</string>
+    <string name="filterVignette">Vinjetė</string>
+    <string name="filterVintage">Senovinis</string>
+    <string name="filterNone">Nieko</string>
+    <string name="crop_result_error">Nepavyko gauti vaizdo po apkarpimo.</string>
+    <string name="image_preview">Redaguojamo vaizdo peržiūra</string>
+    <string name="crop_button">Mygtukas apkirpti arba pasukti vaizdą</string>
+    <string name="save_image_failed">Nepavyksta išsaugoti.</string>
+    <string name="save_image_success">Sėkmingai išsaugota</string>
+    <string name="busy_dialog_text">Vis dar apdorojamas vaizdas. Pirmiausia palaukite, kol jis bus baigtas.</string>
+    <string name="busy_dialog_ok_button">Gerai, palaukti.</string>
+    <string name="no_changes_save">Nebuvo atlikta jokių vaizdo pakeitimų. Išsaugoti kopiją?</string>
+    <string name="yes">Taip</string>
+    <string name="no">Ne</string>
+    <string name="create_custom_filter">Kurti pasirinktinį filtrą</string>
+    <string name="edit_custom_filter">Redaguoti pasirinktinį filtrą</string>
+    <string name="view_filter">Peržiūrėti filtro kodą</string>
+    <string name="custom_filter">Pasirinktinis filtras</string>
+    <string name="delete">Ištrinti</string>
+    <string name="title_of_the_filter">Filtro pavadinimas</string>
+    <string name="view_log">Peržiūrėti žurnalą</string>
+    <string name="shader_code">Šešėlio kodas</string>
+    <string name="filter_error">Klaida kompiliuojant šešėlį.</string>
+    <string name="draw">Piešti</string>
+    <string name="add_text">Pridėti tekstą</string>
+    <string name="stickers">Pridėti lipdukų</string>
+    <string name="sliders">Šliaužikliai</string>
+    <string name="choose_collage_format">Pasirinkite koliažo formatą</string>
+    <string name="choose_the_images">Pasirinkite vaizdus</string>
+    <string name="text_to_add_to_image">Tekstas, kurį norima pridėti į vaizdą</string>
+    <string name="crop">Apkirpti</string>
+</resources>
