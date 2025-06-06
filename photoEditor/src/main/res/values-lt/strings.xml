@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="edit">Redaguoti</string>
-    <string name="filterBlackAndWhite">J ir B</string>
+    <string name="filterBlackAndWhite"><![CDATA[J ir B]]></string>
     <string name="lbl_brightness">Skaistis</string>
     <string name="lbl_contrast">Kontrastas</string>
     <string name="lbl_saturation">Grynis</string>
     <string name="tab_filters">Filtrai</string>
     <string name="filter_thumbnail">Filtro miniatiūra</string>
-    <string name="normal_filter">Įprasta</string>
+    <string name="normal_filter">Įprastas</string>
     <string name="filterElsa">Elza</string>
     <string name="filterFrost">Šaltis</string>
     <string name="filterMars">Marsas</string>
@@ -43,4 +43,5 @@
     <string name="choose_collage_format">Pasirinkite koliažo formatą</string>
     <string name="choose_the_images">Pasirinkite vaizdus</string>
     <string name="text_to_add_to_image">Tekstas, kurį norima pridėti į vaizdą</string>
+    <string name="crop">Apkirpti</string>
 </resources>
