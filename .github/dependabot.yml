@@ -7,11 +7,11 @@ updates:
     schedule:
       interval: daily
       time: '19:00'
-    target-branch: maim
+    target-branch: addToolbar
 
   - package-ecosystem: github-actions
     directory: '/'
     schedule:
       interval: daily
       time: '19:00'
-    target-branch: main
+    target-branch: addToolbar
