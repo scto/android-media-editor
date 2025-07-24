@@ -40,9 +40,12 @@ dependencies {
     implementation 'com.google.android.material:material:1.11.0'
 
     implementation 'info.androidhive:imagefilters:1.0.7'
-    implementation 'com.github.yalantis:ucrop:2.2.8-native'
-
-
+    
+    //implementation 'com.github.yalantis:ucrop:2.2.8-native'
+    implementation 'com.yalantis:ucrop:2.2.8-native'
+    //Source: https://yalantis.com/blog/introducing-ucrop-our-own-image-cropping-library-for-android/
+    //compile 'com.yalantis:ucrop:2.2.8-native'
+    
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.2'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-savedstate:2.6.2'
