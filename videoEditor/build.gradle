@@ -81,4 +81,6 @@ dependencies {
     }
     //implementation 'com.github.yalantis:ucrop:2.2.8-native'
     implementation 'com.yalantis:ucrop:2.2.8-native'
+    implementation 'com.github.yalantis:ucrop:2.2.10' // - lightweight general solution
+    implementation 'com.github.yalantis:ucrop:2.2.9-native' // - get power of the
 }
