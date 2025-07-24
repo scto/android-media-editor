@@ -4,9 +4,6 @@
     "config:recommended",
     ":dependencyDashboard"
   ],
-  "baseBranches": [
-    "addToolbar"
-  ],
   "forkProcessing": "enabled",
   "automerge": false,
   "lockFileMaintenance": {
