@@ -39,7 +39,9 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.11.0'
 
-    implementation 'info.androidhive:imagefilters:1.0.7'
+    //implementation 'info.androidhive:imagefilters:1.0.7'
+	//compile 'net.alhazmy13.ImageFilters:library:0.1.2-beta'
+    implementation 'net.alhazmy13.ImageFilters:library:0.1.2-beta'
     
     //implementation 'com.github.yalantis:ucrop:2.2.8-native'
     implementation 'com.yalantis:ucrop:2.2.8-native'
