@@ -5,20 +5,19 @@ plugins {
     id 'com.android.application' version '8.3.2' apply false
     id 'com.google.devtools.ksp' version '2.0.21-1.0.26' apply false
 }
+
 /*
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
     id 'com.google.devtools.ksp'
 }
-*/
 
 subprojects {
     // Apply maven-publish plugin to all the sub-projects so that jitpack will make a publication
     apply plugin: 'maven-publish'
 }
 
-/*
 android {
     namespace 'org.pixeldroid.media_editor'
     compileSdk 35
