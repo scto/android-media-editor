@@ -6,6 +6,13 @@ plugins {
     id 'com.google.devtools.ksp' version '2.2.0-2.0.2' apply false
 }
 
+allprojects {
+   repositories {
+      jcenter()
+      maven { url "https://jitpack.io" }
+   }
+}
+
 /*
 plugins {
     id 'com.android.library'
