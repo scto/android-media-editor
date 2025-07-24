@@ -4,9 +4,6 @@
     "config:recommended",
     ":dependencyDashboard"
   ],
-  "baseBranches": [
-    "master"
-  ],
   "forkProcessing": "enabled",
   "automerge": false,
   "lockFileMaintenance": {
