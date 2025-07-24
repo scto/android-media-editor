@@ -17,9 +17,11 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven { url "https://jitpack.io" }
+        maven { url "https://repo1.maven.org/maven2/" }
     }
 }
 rootProject.name = 'mediaEditor'
+
 include ':videoEditor'
 include ':photoEditor'
 include ':common'
