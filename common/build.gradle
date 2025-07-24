@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
+/*
 afterEvaluate {
     publishing {
         publications {
@@ -12,6 +13,7 @@ afterEvaluate {
         }
     }
 }
+*/
 
 android {
     namespace 'org.pixeldroid.media_editor.common'
