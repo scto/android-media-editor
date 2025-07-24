@@ -79,5 +79,5 @@ jobs:
           git rebase temp
           git push origin HEAD:${GITHUB_REF_NAME}
         env:
-          TOKEN: ${{ secrets.SUPER_TOKEN }}
-        continue-on-error: true
+          TOKEN: ${{ github.token }} # ${{ secrets.SUPER_TOKEN }}
+          continue-on-error: true
