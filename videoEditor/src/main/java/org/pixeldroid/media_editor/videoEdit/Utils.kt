@@ -6,15 +6,12 @@ import android.net.Uri
 import android.webkit.MimeTypeMap
 import com.arthenica.ffmpegkit.FFmpegKitConfig
 
-
 fun Context.ffmpegCompliantReadUri(inputUri: Uri?): String =
-    if (inputUri?.scheme == "content")
-        FFmpegKitConfig.getSafParameterForRead(this, inputUri)
+    if (inputUri?.scheme == "content") FFmpegKitConfig.getSafParameterForRead(this, inputUri)
     else inputUri.toString()
 
 fun Context.ffmpegCompliantWriteUri(inputUri: Uri?): String =
-    if (inputUri?.scheme == "content")
-        FFmpegKitConfig.getSafParameterForWrite(this, inputUri)
+    if (inputUri?.scheme == "content") FFmpegKitConfig.getSafParameterForWrite(this, inputUri)
     else inputUri.toString()
 
 /** Maps a Float from this range to target range */

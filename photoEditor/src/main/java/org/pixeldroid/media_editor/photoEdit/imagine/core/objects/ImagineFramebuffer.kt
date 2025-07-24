@@ -10,18 +10,13 @@ import org.pixeldroid.media_editor.photoEdit.imagine.util.setProxyInt
  *
  * @property handle Reference to the underlying Framebuffer Object
  */
-internal class ImagineFramebuffer @VisibleForTesting constructor(
-    private val handle: Int,
-) {
+internal class ImagineFramebuffer @VisibleForTesting constructor(private val handle: Int) {
 
-    /**
-     * Indicates whether this underlying resource is released
-     */
+    /** Indicates whether this underlying resource is released */
     private var isReleased: Boolean = false
 
     /**
-     * Utility function to execute the block passed only if
-     * the underlying resource is not released
+     * Utility function to execute the block passed only if the underlying resource is not released
      *
      * @param block Lambda to be executed safely
      */
@@ -43,55 +38,41 @@ internal class ImagineFramebuffer @VisibleForTesting constructor(
             GLES20.GL_COLOR_ATTACHMENT0,
             GLES20.GL_TEXTURE_2D,
             texture.handle,
-            0
+            0,
         )
     }
 
-    /**
-     * Release the underlying Framebuffer Object from memory
-     */
+    /** Release the underlying Framebuffer Object from memory */
     fun release() = releaseSafe {
-        setProxyInt(handle) {
-            GLES20.glDeleteFramebuffers(1, it, 0)
-        }
+        setProxyInt(handle) { GLES20.glDeleteFramebuffers(1, it, 0) }
 
         isReleased = true
     }
 
-    /**
-     * Bind this Framebuffer Object during drawing
-     */
-    fun bind() = releaseSafe {
-        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, handle)
-    }
+    /** Bind this Framebuffer Object during drawing */
+    fun bind() = releaseSafe { GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, handle) }
 
     companion object {
 
-        /**
-         * The default Framebuffer Object representing the viewport
-         */
+        /** The default Framebuffer Object representing the viewport */
         val default = ImagineFramebuffer(0)
 
         /**
-         * Safely create a new Framebuffer Object in OpenGL
-         * and wrap it in [ImagineFramebuffer]
+         * Safely create a new Framebuffer Object in OpenGL and wrap it in [ImagineFramebuffer]
          *
          * @return An active [ImagineFramebuffer]
          */
         fun create(): ImagineFramebuffer {
-            val framebufferHandle = getProxyInt {
-                GLES20.glGenFramebuffers(1, it, 0)
-            }
+            val framebufferHandle = getProxyInt { GLES20.glGenFramebuffers(1, it, 0) }
 
             return ImagineFramebuffer(framebufferHandle)
         }
 
         /**
-         * Safely create a number of Framebuffer Objects in
-         * OpenGL and wrap them in [ImagineFramebuffer]
+         * Safely create a number of Framebuffer Objects in OpenGL and wrap them in
+         * [ImagineFramebuffer]
          *
          * @param count Number of Framebuffer Objects to be created
-         *
          * @return List of active [ImagineFramebuffer]s
          */
         fun create(count: Int): List<ImagineFramebuffer> {
@@ -100,7 +81,5 @@ internal class ImagineFramebuffer @VisibleForTesting constructor(
 
             return framebufferHandles.map { ImagineFramebuffer(it) }
         }
-
     }
-
 }

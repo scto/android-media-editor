@@ -3,12 +3,13 @@ package org.pixeldroid.media_editor.photoEdit.imagine.layers
 import org.pixeldroid.media_editor.photoEdit.R
 import org.pixeldroid.media_editor.photoEdit.imagine.core.types.ImagineLayer
 
-class VignetteLayer: ImagineLayer(initialIntensity = 1f) {
+class VignetteLayer : ImagineLayer(initialIntensity = 1f) {
 
     override val name: Int = R.string.filterVignette
 
     // Inspired by https://www.shadertoy.com/view/MsBBDV
-    override val source: String = """
+    override val source: String =
+        """
        vec4 process(vec4 color, sampler2D uImage, vec2 vTexCoords) {
             float blend = 0.2;   
             float dist = distance(vTexCoords, vec2(0.5)) + blend;
@@ -20,5 +21,6 @@ class VignetteLayer: ImagineLayer(initialIntensity = 1f) {
             
             return vec4(mix(col, color.rgb, blend), color.a);         
         }
-    """.trimIndent()
+    """
+            .trimIndent()
 }

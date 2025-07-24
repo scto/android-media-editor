@@ -11,27 +11,29 @@ import android.graphics.RectF
  * Handler to update crop window edges by the move type - Horizontal, Vertical, Corner or Center.
  */
 internal class CropWindowMoveHandler(
-    /** The type of crop window move that is handled.  */
+    /** The type of crop window move that is handled. */
     private val mType: Type,
-    cropWindowHandler: CropWindowHandler, touchX: Float, touchY: Float
+    cropWindowHandler: CropWindowHandler,
+    touchX: Float,
+    touchY: Float,
 ) {
-    /** Minimum width in pixels that the crop window can get.  */
+    /** Minimum width in pixels that the crop window can get. */
     private val mMinCropWidth: Float
 
-    /** Minimum width in pixels that the crop window can get.  */
+    /** Minimum width in pixels that the crop window can get. */
     private val mMinCropHeight: Float
 
-    /** Maximum height in pixels that the crop window can get.  */
+    /** Maximum height in pixels that the crop window can get. */
     private val mMaxCropWidth: Float
 
-    /** Maximum height in pixels that the crop window can get.  */
+    /** Maximum height in pixels that the crop window can get. */
     private val mMaxCropHeight: Float
 
     /**
-     * Holds the x and y offset between the exact touch location and the exact handle location that is
-     * activated. There may be an offset because we allow for some leeway (specified by mHandleRadius)
-     * in activating a handle. However, we want to maintain these offset values while the handle is
-     * being dragged so that the handle doesn't jump.
+     * Holds the x and y offset between the exact touch location and the exact handle location that
+     * is activated. There may be an offset because we allow for some leeway (specified by
+     * mHandleRadius) in activating a handle. However, we want to maintain these offset values while
+     * the handle is being dragged so that the handle doesn't jump.
      */
     private val mTouchOffset = PointF()
 
@@ -44,24 +46,24 @@ internal class CropWindowMoveHandler(
     }
 
     /**
-     * Updates the crop window by change in the touch location.
-     * Move type handled by this instance, as initialized in creation, affects how the change in
-     * touch location changes the crop window position and size.
-     * After the crop window position/size is changed by touch move it may result in values that
-     * violate constraints: outside the bounds of the shown bitmap, smaller/larger than min/max size or
-     * mismatch in aspect ratio. So a series of fixes is executed on "secondary" edges to adjust it
-     * by the "primary" edge movement.
-     * Primary is the edge directly affected by move type, secondary is the other edge.
-     * The crop window is changed by directly setting the Edge coordinates.
+     * Updates the crop window by change in the touch location. Move type handled by this instance,
+     * as initialized in creation, affects how the change in touch location changes the crop window
+     * position and size. After the crop window position/size is changed by touch move it may result
+     * in values that violate constraints: outside the bounds of the shown bitmap, smaller/larger
+     * than min/max size or mismatch in aspect ratio. So a series of fixes is executed on
+     * "secondary" edges to adjust it by the "primary" edge movement. Primary is the edge directly
+     * affected by move type, secondary is the other edge. The crop window is changed by directly
+     * setting the Edge coordinates.
      *
      * @param x the new x-coordinate of this handle
      * @param y the new y-coordinate of this handle
      * @param bounds the bounding rectangle of the image
-     * @param viewWidth The bounding image view width used to know the crop overlay is at view edges.
+     * @param viewWidth The bounding image view width used to know the crop overlay is at view
+     *   edges.
      * @param viewHeight The bounding image view height used to know the crop overlay is at view
-     * edges.
-     * @param snapMargin the maximum distance (in pixels) at which the crop window should snap to the
-     * image
+     *   edges.
+     * @param snapMargin the maximum distance (in pixels) at which the crop window should snap to
+     *   the image
      */
     fun move(
         rect: RectF,
@@ -70,7 +72,7 @@ internal class CropWindowMoveHandler(
         bounds: RectF,
         viewWidth: Int,
         viewHeight: Int,
-        snapMargin: Float
+        snapMargin: Float,
     ) {
 
         // Adjust the coordinates for the finger position's offset (i.e. the
@@ -85,11 +87,12 @@ internal class CropWindowMoveHandler(
             changeSize(rect, adjX, adjY, bounds, viewWidth, viewHeight, snapMargin)
         }
     }
+
     // region: Private methods
     /**
-     * Calculates the offset of the touch point from the precise location of the specified handle.<br></br>
-     * Save these values in a member variable since we want to maintain this offset as we drag the
-     * handle.
+     * Calculates the offset of the touch point from the precise location of the specified
+     * handle.<br></br> Save these values in a member variable since we want to maintain this offset
+     * as we drag the handle.
      */
     private fun calculateTouchOffset(rect: RectF, touchX: Float, touchY: Float) {
         var touchOffsetX = 0f
@@ -144,7 +147,7 @@ internal class CropWindowMoveHandler(
         mTouchOffset.y = touchOffsetY
     }
 
-    /** Center move only changes the position of the crop window without changing the size.  */
+    /** Center move only changes the position of the crop window without changing the size. */
     private fun moveCenter(
         rect: RectF,
         x: Float,
@@ -152,15 +155,25 @@ internal class CropWindowMoveHandler(
         bounds: RectF,
         viewWidth: Int,
         viewHeight: Int,
-        snapRadius: Float
+        snapRadius: Float,
     ) {
         var dx = x - rect.centerX()
         var dy = y - rect.centerY()
-        if (rect.left + dx < 0 || rect.right + dx > viewWidth || rect.left + dx < bounds.left || rect.right + dx > bounds.right) {
+        if (
+            rect.left + dx < 0 ||
+                rect.right + dx > viewWidth ||
+                rect.left + dx < bounds.left ||
+                rect.right + dx > bounds.right
+        ) {
             dx /= 1.05f
             mTouchOffset.x -= dx / 2
         }
-        if (rect.top + dy < 0 || rect.bottom + dy > viewHeight || rect.top + dy < bounds.top || rect.bottom + dy > bounds.bottom) {
+        if (
+            rect.top + dy < 0 ||
+                rect.bottom + dy > viewHeight ||
+                rect.top + dy < bounds.top ||
+                rect.bottom + dy > bounds.bottom
+        ) {
             dy /= 1.05f
             mTouchOffset.y -= dy / 2
         }
@@ -178,7 +191,7 @@ internal class CropWindowMoveHandler(
         bounds: RectF,
         viewWidth: Int,
         viewHeight: Int,
-        snapMargin: Float
+        snapMargin: Float,
     ) {
         when (mType) {
             Type.TOP_LEFT -> {
@@ -209,7 +222,7 @@ internal class CropWindowMoveHandler(
         }
     }
 
-    /** Check if edges have gone out of bounds (including snap margin), and fix if needed.  */
+    /** Check if edges have gone out of bounds (including snap margin), and fix if needed. */
     private fun snapEdgesToBounds(edges: RectF, bounds: RectF, margin: Float) {
         if (edges.left < bounds.left + margin) {
             edges.offset(bounds.left - edges.left, 0f)
@@ -233,12 +246,7 @@ internal class CropWindowMoveHandler(
      * @param bounds the bounding box of the image that is being notCropped
      * @param snapMargin the snap distance to the image edge (in pixels)
      */
-    private fun adjustLeft(
-        rect: RectF,
-        left: Float,
-        bounds: RectF,
-        snapMargin: Float
-    ) {
+    private fun adjustLeft(rect: RectF, left: Float, bounds: RectF, snapMargin: Float) {
         var newLeft = left
         if (newLeft < 0) {
             newLeft /= 1.05f
@@ -280,7 +288,7 @@ internal class CropWindowMoveHandler(
         right: Float,
         bounds: RectF,
         viewWidth: Int,
-        snapMargin: Float
+        snapMargin: Float,
     ) {
         var newRight = right
         if (newRight > viewWidth) {
@@ -314,19 +322,14 @@ internal class CropWindowMoveHandler(
     }
 
     /**
-     * Get the resulting y-position of the top edge of the crop window given the handle's position and
-     * the image's bounding box and snap radius.
+     * Get the resulting y-position of the top edge of the crop window given the handle's position
+     * and the image's bounding box and snap radius.
      *
      * @param top the x-position that the top edge is dragged to
      * @param bounds the bounding box of the image that is being notCropped
      * @param snapMargin the snap distance to the image edge (in pixels)
      */
-    private fun adjustTop(
-        rect: RectF,
-        top: Float,
-        bounds: RectF,
-        snapMargin: Float
-    ) {
+    private fun adjustTop(rect: RectF, top: Float, bounds: RectF, snapMargin: Float) {
         var newTop = top
         if (newTop < 0) {
             newTop /= 1.05f
@@ -355,11 +358,11 @@ internal class CropWindowMoveHandler(
     }
 
     /**
-     * Get the resulting y-position of the bottom edge of the crop window given the handle's position
-     * and the image's bounding box and snap radius.
+     * Get the resulting y-position of the bottom edge of the crop window given the handle's
+     * position and the image's bounding box and snap radius.
      *
-     * @param bottom     the position that the bottom edge is dragged to
-     * @param bounds     the bounding box of the image that is being notCropped
+     * @param bottom the position that the bottom edge is dragged to
+     * @param bounds the bounding box of the image that is being notCropped
      * @param viewHeight
      * @param snapMargin the snap distance to the image edge (in pixels)
      */
@@ -368,7 +371,7 @@ internal class CropWindowMoveHandler(
         bottom: Float,
         bounds: RectF,
         viewHeight: Int,
-        snapMargin: Float
+        snapMargin: Float,
     ) {
         var newBottom = bottom
         if (newBottom > viewHeight) {
@@ -396,10 +399,19 @@ internal class CropWindowMoveHandler(
         }
         rect.bottom = newBottom
     }
+
     // endregion
 
-    /** The type of crop window move that is handled.  */
+    /** The type of crop window move that is handled. */
     enum class Type {
-        TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT, LEFT, TOP, RIGHT, BOTTOM, CENTER
+        TOP_LEFT,
+        TOP_RIGHT,
+        BOTTOM_LEFT,
+        BOTTOM_RIGHT,
+        LEFT,
+        TOP,
+        RIGHT,
+        BOTTOM,
+        CENTER,
     }
 }

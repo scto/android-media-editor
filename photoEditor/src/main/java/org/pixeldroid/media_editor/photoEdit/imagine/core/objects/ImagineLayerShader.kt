@@ -5,63 +5,44 @@ import org.pixeldroid.media_editor.photoEdit.imagine.core.types.ImagineBlendMode
 import org.pixeldroid.media_editor.photoEdit.imagine.core.types.ImagineMatrix
 
 /**
- * A wrapper for an [ImagineShader.Program]. This follows the Decorator
- * pattern to provide some Imagine layer processing specific functionality
- * using the contained shader program.
+ * A wrapper for an [ImagineShader.Program]. This follows the Decorator pattern to provide some
+ * Imagine layer processing specific functionality using the contained shader program.
  *
  * @property program The underlying [ImagineShader.Program]
  */
-internal class ImagineLayerShader(
-    val program: ImagineShader.Program
-) {
-    /**
-     * Aspect ratio matrix uniform
-     */
+internal class ImagineLayerShader(val program: ImagineShader.Program) {
+    /** Aspect ratio matrix uniform */
     private val aspectRatio: ImagineShaderBinding.Uniform =
         ImagineShaderBinding.Uniform(GLES20.glGetUniformLocation(program.program, "uAspectRatio"))
 
-    /**
-     * Invert matrix uniform
-     */
+    /** Invert matrix uniform */
     private val invert: ImagineShaderBinding.Uniform =
         ImagineShaderBinding.Uniform(GLES20.glGetUniformLocation(program.program, "uInvert"))
 
-    /**
-     * Image texture uniform
-     */
+    /** Image texture uniform */
     private val image: ImagineShaderBinding.Uniform =
         ImagineShaderBinding.Uniform(GLES20.glGetUniformLocation(program.program, "sampler2D"))
 
-    /**
-     * Intensity value uniform
-     */
+    /** Intensity value uniform */
     private val intensity: ImagineShaderBinding.Uniform =
         ImagineShaderBinding.Uniform(GLES20.glGetUniformLocation(program.program, "uIntensity"))
 
-    /**
-     * Blend mode raw value uniform
-     */
+    /** Blend mode raw value uniform */
     private val blendMode: ImagineShaderBinding.Uniform =
         ImagineShaderBinding.Uniform(GLES20.glGetUniformLocation(program.program, "uBlendMode"))
 
-
-    /**
-     * Release the underlying shader program
-     */
+    /** Release the underlying shader program */
     fun release() {
         program.release()
     }
 
-    /**
-     * Bind the underlying shader for drawing
-     */
+    /** Bind the underlying shader for drawing */
     fun bind() {
         program.use()
     }
 
     /**
-     * Bind an aspect ratio matrix to be used to correctly shape the
-     * quad inside the viewport
+     * Bind an aspect ratio matrix to be used to correctly shape the quad inside the viewport
      *
      * @param matrix An instance of [ImagineMatrix]
      */
@@ -69,17 +50,14 @@ internal class ImagineLayerShader(
         aspectRatio.bindMatrix(matrix)
     }
 
-
     /**
-     * Bind an image inversion matrix to be used to invert an
-     * upside down bitmap
+     * Bind an image inversion matrix to be used to invert an upside down bitmap
      *
      * @param matrix An instance of [ImagineMatrix]
      */
     fun bindInvertMatrix(matrix: ImagineMatrix) {
         invert.bindMatrix(matrix)
     }
-
 
     /**
      * Bind a Texture Object to the correct uniform in the shader program
@@ -92,8 +70,8 @@ internal class ImagineLayerShader(
     }
 
     /**
-     * Bind the intensity value to the shader program to control
-     * the interpolation between the original and the processed layer
+     * Bind the intensity value to the shader program to control the interpolation between the
+     * original and the processed layer
      *
      * @param value A Float value between 0.0f and 1.0f
      */
@@ -102,8 +80,8 @@ internal class ImagineLayerShader(
     }
 
     /**
-     * Bind the blendMode value to the shader program to control
-     * the blending between the original and the processed layer
+     * Bind the blendMode value to the shader program to control the blending between the original
+     * and the processed layer
      *
      * @param value A Float value between 0.0f and 1.0f
      */
@@ -113,14 +91,10 @@ internal class ImagineLayerShader(
 
     companion object {
 
-        /**
-         * Vertex streaming attribute
-         */
+        /** Vertex streaming attribute */
         val position = ImagineShaderBinding.Attribute(0)
 
-        /**
-         * Texture coordinates streaming attribute
-         */
+        /** Texture coordinates streaming attribute */
         val texCoords = ImagineShaderBinding.Attribute(1)
     }
 }

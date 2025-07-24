@@ -22,24 +22,22 @@ class SliderFragment : Fragment(), OnChangeListener {
 
     companion object {
         const val BRIGHTNESS_MAX = .004f
-        const val CONTRAST_MAX= .9f
+        const val CONTRAST_MAX = .9f
         const val SATURATION_MAX = 1f
         const val BRIGHTNESS_MIN = -.004f
-        const val CONTRAST_MIN= -.9f
+        const val CONTRAST_MIN = -.9f
         const val SATURATION_MIN = -1f
-
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
     ): View {
         // Inflate the layout for this fragment
         binding = FragmentEditImageBinding.inflate(inflater, container, false)
 
-        val _model: PhotoEditViewModel by activityViewModels {
-            PhotoEditViewModelFactory()
-        }
+        val _model: PhotoEditViewModel by activityViewModels { PhotoEditViewModelFactory() }
         model = _model
 
         binding.sliderBrightness.valueTo = BRIGHTNESS_MAX
@@ -59,10 +57,10 @@ class SliderFragment : Fragment(), OnChangeListener {
         return binding.root
     }
 
-    private fun setOnSliderChangeListeners(listener: OnChangeListener){
-            binding.sliderBrightness.addOnChangeListener(listener)
-            binding.sliderContrast.addOnChangeListener(listener)
-            binding.sliderSaturation.addOnChangeListener(listener)
+    private fun setOnSliderChangeListeners(listener: OnChangeListener) {
+        binding.sliderBrightness.addOnChangeListener(listener)
+        binding.sliderContrast.addOnChangeListener(listener)
+        binding.sliderSaturation.addOnChangeListener(listener)
     }
 
     fun resetControl(sliders: StateFlow<PhotoEditViewModel.Sliders>? = null) {

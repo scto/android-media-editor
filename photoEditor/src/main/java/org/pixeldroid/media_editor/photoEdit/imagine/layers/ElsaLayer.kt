@@ -3,12 +3,14 @@ package org.pixeldroid.media_editor.photoEdit.imagine.layers
 import org.pixeldroid.media_editor.photoEdit.R
 import org.pixeldroid.media_editor.photoEdit.imagine.core.types.ImagineLayer
 
-class ElsaLayer: ImagineLayer(initialIntensity = 1f) {
+class ElsaLayer : ImagineLayer(initialIntensity = 1f) {
 
     override val name: Int = R.string.filterElsa
 
-    // Inspired by https://github.com/yulu/Instagram_Filter/blob/master/res/raw/hudson_filter_shader.glsl
-    override val source: String = """
+    // Inspired by
+    // https://github.com/yulu/Instagram_Filter/blob/master/res/raw/hudson_filter_shader.glsl
+    override val source: String =
+        """
        vec4 process(vec4 color, sampler2D uImage, vec2 vTexCoords) {
             
             vec3 black = vec3(0.0);
@@ -30,6 +32,6 @@ class ElsaLayer: ImagineLayer(initialIntensity = 1f) {
             satColor *= smoothstep(0.8, falloff * 0.8, dist * (amount + falloff));
             return vec4(mix(satColor, color.rgb, bl), color.a);               
         }
-    """.trimIndent()
-
+    """
+            .trimIndent()
 }

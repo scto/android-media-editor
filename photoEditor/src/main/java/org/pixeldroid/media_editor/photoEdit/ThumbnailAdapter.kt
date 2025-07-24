@@ -11,35 +11,33 @@ import androidx.recyclerview.widget.RecyclerView
 import org.pixeldroid.media_editor.photoEdit.databinding.ThumbnailListItemBinding
 import org.pixeldroid.media_editor.photoEdit.imagine.core.types.ImagineLayer
 
-class ThumbnailAdapter (private val context: Context,
-                        initialFilters: List<ImagineLayer?>,
-                        private val listener: FilterListFragment,
-): RecyclerView.Adapter<ThumbnailAdapter.MyViewHolder>() {
+class ThumbnailAdapter(
+    private val context: Context,
+    initialFilters: List<ImagineLayer?>,
+    private val listener: FilterListFragment,
+) : RecyclerView.Adapter<ThumbnailAdapter.MyViewHolder>() {
 
     private var selectedIndex = 0
 
     var tbItemList: List<ImagineLayer?> = initialFilters
         set(value) {
             field = value
-            (context as AppCompatActivity).runOnUiThread {
-                notifyDataSetChanged()
-            }
+            (context as AppCompatActivity).runOnUiThread { notifyDataSetChanged() }
         }
 
     var thumbnails: List<Bitmap?> = arrayOfNulls<Bitmap?>(initialFilters.size).toList()
         set(value) {
             field = value
-            (context as AppCompatActivity).runOnUiThread {
-                notifyDataSetChanged()
-            }
+            (context as AppCompatActivity).runOnUiThread { notifyDataSetChanged() }
         }
 
     fun resetSelected(select: ImagineLayer? = null, manual: Boolean = false) {
-        val index = if(manual) tbItemList.indexOf(select)
-        else {
-            listener.onFilterSelected(0)
-            0
-        }
+        val index =
+            if (manual) tbItemList.indexOf(select)
+            else {
+                listener.onFilterSelected(0)
+                0
+            }
         val previous = selectedIndex
         selectedIndex = index
         notifyItemChanged(previous)
@@ -62,9 +60,7 @@ class ThumbnailAdapter (private val context: Context,
             holder.filterName.text = "Add Custom Filter"
             holder.filterName.setTextColor(context.getColorFromAttr(R.attr.colorOnBackground))
 
-            holder.thumbnail.setOnClickListener {
-                listener.onFilterSelected(position)
-            }
+            holder.thumbnail.setOnClickListener { listener.onFilterSelected(position) }
             return
         }
         val tbItem = tbItemList.getOrNull(position)
@@ -83,7 +79,7 @@ class ThumbnailAdapter (private val context: Context,
         }
 
         holder.filterName.text =
-                // If the item is null, this is a noop item ("None" filter)
+            // If the item is null, this is a noop item ("None" filter)
             if (tbItem == null) context.getString(R.string.filterNone)
             else if (tbItem.name != null) context.getString(tbItem.name!!)
             else if (tbItem.customName != null) tbItem.customName
@@ -91,11 +87,11 @@ class ThumbnailAdapter (private val context: Context,
 
         if (selectedIndex == position)
             holder.filterName.setTextColor(context.getColorFromAttr(R.attr.colorPrimary))
-        else
-            holder.filterName.setTextColor(context.getColorFromAttr(R.attr.colorOnBackground))
+        else holder.filterName.setTextColor(context.getColorFromAttr(R.attr.colorOnBackground))
     }
 
-    class MyViewHolder(itemBinding: ThumbnailListItemBinding): RecyclerView.ViewHolder(itemBinding.root) {
+    class MyViewHolder(itemBinding: ThumbnailListItemBinding) :
+        RecyclerView.ViewHolder(itemBinding.root) {
         var thumbnail: ImageView = itemBinding.thumbnail
         var filterName: TextView = itemBinding.filterName
     }

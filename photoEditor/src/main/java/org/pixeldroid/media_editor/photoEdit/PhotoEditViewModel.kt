@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.pixeldroid.media_editor.photoEdit.imagine.core.types.ImagineLayer
 
-class PhotoEditViewModel: ViewModel() {
+class PhotoEditViewModel : ViewModel() {
     private val _shownView: MutableStateFlow<ShownView> = MutableStateFlow(ShownView.Main)
     val shownView: StateFlow<ShownView> = _shownView
 
@@ -35,13 +35,19 @@ class PhotoEditViewModel: ViewModel() {
         // Fraction of positioning in image along x axis, 0 is left, 1 is right
         val x: Float,
         // Fraction of positioning in image along y axis, 0 is top, 1 is bottom
-        val y: Float
+        val y: Float,
     )
-    private val _stickerList: MutableStateFlow<List<PositionedSticker>> = MutableStateFlow(arrayListOf())
+
+    private val _stickerList: MutableStateFlow<List<PositionedSticker>> =
+        MutableStateFlow(arrayListOf())
     val stickerList: StateFlow<List<PositionedSticker>> = _stickerList.asStateFlow()
 
     enum class ShownView {
-        Main, Draw, Text, Sticker, Crop
+        Main,
+        Draw,
+        Text,
+        Sticker,
+        Crop,
     }
 
     private val _sliders: MutableStateFlow<Sliders> = MutableStateFlow(Sliders())
@@ -51,12 +57,10 @@ class PhotoEditViewModel: ViewModel() {
     val slidersChange = sliders.debounce(750).map { Change.SlidersChange(it) }
 
     init {
-        viewModelScope.launch {
-            slidersChange.collect { doChange(it) }
-        }
+        viewModelScope.launch { slidersChange.collect { doChange(it) } }
     }
 
-    data class Sliders (
+    data class Sliders(
         val brightness: Float = BRIGHTNESS_START,
         val contrast: Float = CONTRAST_START,
         val saturation: Float = SATURATION_START,
@@ -69,33 +73,17 @@ class PhotoEditViewModel: ViewModel() {
     }
 
     sealed class Change() {
-        data class Draw(
-            val path: Path
-        ): Change()
+        data class Draw(val path: Path) : Change()
 
-        data class PositionText(
-            val text: String,
-            val x: Float,
-            val y: Float,
-        ) : Change()
+        data class PositionText(val text: String, val x: Float, val y: Float) : Change()
 
-        data class PositionSticker(
-            val sticker: Uri,
-            val x: Float,
-            val y: Float,
-        ) : Change()
+        data class PositionSticker(val sticker: Uri, val x: Float, val y: Float) : Change()
 
-        data class SelectFilter(
-            val filter: ImagineLayer?
-        ): Change()
+        data class SelectFilter(val filter: ImagineLayer?) : Change()
 
-        data class SlidersChange(
-            val sliders: Sliders
-        ): Change()
+        data class SlidersChange(val sliders: Sliders) : Change()
 
-        data class CropChange(
-            val newImage: Uri
-        ): Change()
+        data class CropChange(val newImage: Uri) : Change()
     }
 
     var changes: List<Change> = emptyList()
@@ -103,6 +91,7 @@ class PhotoEditViewModel: ViewModel() {
 
     var imageUri: Uri? = null
         get() = field ?: initialUri
+
     var initialUri: Uri? = null
 
     // Path of the drawing
@@ -113,36 +102,49 @@ class PhotoEditViewModel: ViewModel() {
         // Fraction of positioning in image along x axis, 0 is left, 1 is right
         val x: Float,
         // Fraction of positioning in image along y axis, 0 is top, 1 is bottom
-        val y: Float
+        val y: Float,
     )
+
     val textList = ArrayList<PositionedString>()
 
     private val _filter: MutableStateFlow<ImagineLayer?> = MutableStateFlow(null)
     val filter: StateFlow<ImagineLayer?> = _filter
 
-    fun startDraw() { _shownView.value = ShownView.Draw }
+    fun startDraw() {
+        _shownView.value = ShownView.Draw
+    }
 
-    fun startText() { _shownView.value = ShownView.Text }
+    fun startText() {
+        _shownView.value = ShownView.Text
+    }
 
-    fun startStickers() { _shownView.value = ShownView.Sticker }
+    fun startStickers() {
+        _shownView.value = ShownView.Sticker
+    }
 
     fun startCrop() {
         _shownView.value = ShownView.Crop
         _shownView.value = ShownView.Main
     }
 
-    fun showMain() { _shownView.value = ShownView.Main }
+    fun showMain() {
+        _shownView.value = ShownView.Main
+    }
 
-    private fun resetSliders() { _sliders.value = Sliders() }
+    private fun resetSliders() {
+        _sliders.value = Sliders()
+    }
 
     // Harder to track change, need debounce
     fun onBrightnessChange(brightness: Float) {
         _sliders.value = _sliders.value.copy(brightness = brightness)
     }
+
     // Harder to track change, need debounce
     fun onContrastChange(contrast: Float) {
         _sliders.value = _sliders.value.copy(contrast = contrast)
     }
+
     // Harder to track change, need debounce
     fun onSaturationChange(saturation: Float) {
         _sliders.value = _sliders.value.copy(saturation = saturation)
@@ -160,14 +162,16 @@ class PhotoEditViewModel: ViewModel() {
     }
 
     fun restoreState(changes: List<Change>) {
-        val pastSliders = (changes.findLast { it is Change.SlidersChange } as? Change.SlidersChange)?.sliders
+        val pastSliders =
+            (changes.findLast { it is Change.SlidersChange } as? Change.SlidersChange)?.sliders
         if (pastSliders != null) {
             _sliders.value = pastSliders
         } else {
             resetSliders()
         }
 
-        val filter = (changes.findLast { it is Change.SelectFilter } as? Change.SelectFilter)?.filter
+        val filter =
+            (changes.findLast { it is Change.SelectFilter } as? Change.SelectFilter)?.filter
         filterSelected(filter)
 
         val path = (changes.findLast { it is Change.Draw } as? Change.Draw)?.path
@@ -175,9 +179,9 @@ class PhotoEditViewModel: ViewModel() {
             drawingPath.set(path)
         } else drawingPath.reset()
 
-        changes.filter { it is Change.PositionText ||  it is Change.PositionSticker}.forEach {
-            doChange(it, save = false)
-        }
+        changes
+            .filter { it is Change.PositionText || it is Change.PositionSticker }
+            .forEach { doChange(it, save = false) }
 
         val image = (changes.findLast { it is Change.CropChange } as? Change.CropChange)?.newImage
         imageUri = image ?: initialUri
@@ -204,7 +208,8 @@ class PhotoEditViewModel: ViewModel() {
     }
 
     fun slidersWereChanged(sliders: Sliders): Boolean {
-        val lastSliders = (changes.findLast { it is Change.SlidersChange } as? Change.SlidersChange)?.sliders
+        val lastSliders =
+            (changes.findLast { it is Change.SlidersChange } as? Change.SlidersChange)?.sliders
         return if (lastSliders != null) {
             sliders != lastSliders
         } else {
@@ -219,7 +224,7 @@ class PhotoEditViewModel: ViewModel() {
     }
 
     fun doChange(c: Change, save: Boolean = true, dropRedoHistory: Boolean = true) {
-        when(c) {
+        when (c) {
             is Change.Draw -> drawingPath.set(c.path)
             is Change.PositionSticker -> addStickerAt(c.sticker, c.x, c.y)
             is Change.PositionText -> addTextAt(c.text, c.x, c.y)
@@ -229,8 +234,7 @@ class PhotoEditViewModel: ViewModel() {
                 if (same) return
             }
             is Change.SlidersChange -> {
-                if (slidersWereChanged(c.sliders)) _sliders.value = c.sliders
-                else return
+                if (slidersWereChanged(c.sliders)) _sliders.value = c.sliders else return
             }
             is Change.CropChange -> imageUri = c.newImage
         }
@@ -249,7 +253,7 @@ class PhotoEditViewModel: ViewModel() {
 
     fun redoChange() {
         val firstChange = redoChanges.lastOrNull()
-        if(firstChange != null) doChange(firstChange, save = true, dropRedoHistory = false)
+        if (firstChange != null) doChange(firstChange, save = true, dropRedoHistory = false)
         redoChanges = redoChanges.dropLast(1)
     }
 
@@ -258,30 +262,26 @@ class PhotoEditViewModel: ViewModel() {
     }
 
     fun scaleHistoryPaths(scaleMatrix: Matrix) {
-        redoChanges = redoChanges.map {
-            (it as? Change.Draw)?.let {
-                Change.Draw(
-                    Path().apply {
-                        it.path.transform(scaleMatrix, this@apply)
-                    }
-                )
-            } ?: it
-        }
-        changes = changes.map {
-            (it as? Change.Draw)?.let {
-                Change.Draw(
-                    Path().apply {
-                        it.path.transform(scaleMatrix, this@apply)
-                    }
-                )
-            } ?: it
-        }
+        redoChanges =
+            redoChanges.map {
+                (it as? Change.Draw)?.let {
+                    Change.Draw(Path().apply { it.path.transform(scaleMatrix, this@apply) })
+                } ?: it
+            }
+        changes =
+            changes.map {
+                (it as? Change.Draw)?.let {
+                    Change.Draw(Path().apply { it.path.transform(scaleMatrix, this@apply) })
+                } ?: it
+            }
     }
 }
 
-class PhotoEditViewModelFactory: AbstractSavedStateViewModelFactory() {
+class PhotoEditViewModelFactory : AbstractSavedStateViewModelFactory() {
     override fun <T : ViewModel> create(
-        key: String, modelClass: Class<T>, handle: SavedStateHandle
+        key: String,
+        modelClass: Class<T>,
+        handle: SavedStateHandle,
     ): T {
         return modelClass.getConstructor().newInstance()
     }

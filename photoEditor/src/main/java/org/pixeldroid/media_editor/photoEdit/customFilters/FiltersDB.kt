@@ -26,9 +26,6 @@ object DatabaseBuilder {
     }
 
     private fun buildRoomDB(context: Context) =
-        Room.databaseBuilder(
-            context.applicationContext,
-            AppDatabase::class.java, "custom-filters"
-        ).build()
-
+        Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "custom-filters")
+            .build()
 }

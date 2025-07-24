@@ -1,8 +1,7 @@
 package org.pixeldroid.media_editor.photoEdit.imagine.core.types
 
 /**
- * Represents the algorithm which will be used to blend
- * the processed layer with the previous layer
+ * Represents the algorithm which will be used to blend the processed layer with the previous layer
  */
 enum class ImagineBlendMode {
     // Normal

@@ -11,43 +11,31 @@ import org.pixeldroid.media_editor.photoEdit.imagine.util.setProxyInt
 /**
  * A high level wrapper for an OpenGL Texture Object.
  *
- * You cannot directly instantiate this. Instead use the companion
- * function family of [create] to do so.
+ * You cannot directly instantiate this. Instead use the companion function family of [create] to do
+ * so.
  *
  * @property handle Raw handle to the underlying OpenGL Texture
  * @property dimensions Dimensions of the image of this texture
  */
-internal class ImagineTexture @VisibleForTesting constructor(
-    val handle: Int,
-    val dimensions: ImagineDimensions,
-) {
+internal class ImagineTexture
+@VisibleForTesting
+constructor(val handle: Int, val dimensions: ImagineDimensions) {
 
-    /**
-     * Indicates whether this underlying resource is released
-     */
+    /** Indicates whether this underlying resource is released */
     private var isReleased: Boolean = false
 
-    /**
-     * Safely binds this texture to the [GLES20.GL_TEXTURE_2D] target
-     */
-    fun bind() = releaseSafe {
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, handle)
-    }
+    /** Safely binds this texture to the [GLES20.GL_TEXTURE_2D] target */
+    fun bind() = releaseSafe { GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, handle) }
 
-    /**
-     * Safely releases the texture from memory
-     */
+    /** Safely releases the texture from memory */
     fun release() = releaseSafe {
-        setProxyInt(handle) {
-            GLES20.glDeleteTextures(1, it, 0)
-        }
+        setProxyInt(handle) { GLES20.glDeleteTextures(1, it, 0) }
 
         isReleased = true
     }
 
     /**
-     * Utility function to execute the block passed only if
-     * the underlying resource is not released
+     * Utility function to execute the block passed only if the underlying resource is not released
      *
      * @param block Lambda to be executed safely
      */
@@ -60,9 +48,7 @@ internal class ImagineTexture @VisibleForTesting constructor(
         /**
          * Safely instantiate a texture of custom dimensions
          *
-         * @param dimensions The [ImagineDimensions] to use while creating
-         * the texture
-         *
+         * @param dimensions The [ImagineDimensions] to use while creating the texture
          * @return A valid [ImagineTexture]
          */
         fun create(dimensions: ImagineDimensions): ImagineTexture {
@@ -78,7 +64,7 @@ internal class ImagineTexture @VisibleForTesting constructor(
                 0,
                 GLES20.GL_RGBA,
                 GLES20.GL_UNSIGNED_BYTE,
-                null
+                null,
             )
 
             return ImagineTexture(textureHandle, dimensions)
@@ -89,7 +75,6 @@ internal class ImagineTexture @VisibleForTesting constructor(
          *
          * @param count Number of textures to instantiate
          * @param dimensions The [ImagineDimensions] to use while creating
-         *
          * @return List of valid [ImagineTexture]s
          */
         fun create(count: Int, dimensions: ImagineDimensions): List<ImagineTexture> {
@@ -108,7 +93,7 @@ internal class ImagineTexture @VisibleForTesting constructor(
                     0,
                     GLES20.GL_RGBA,
                     GLES20.GL_UNSIGNED_BYTE,
-                    null
+                    null,
                 )
             }
 
@@ -121,13 +106,12 @@ internal class ImagineTexture @VisibleForTesting constructor(
          * @param bitmap Bitmap to copy pixels from
          * @param mipmap Should enable & generate mipmapping
          * @param recycleBitmap Should recycle the bitmap after data has been extracted
-         *
          * @return A valid [ImagineTexture]
          */
         fun create(
             bitmap: Bitmap,
             mipmap: Boolean = false,
-            recycleBitmap: Boolean = false
+            recycleBitmap: Boolean = false,
         ): ImagineTexture {
             val textureHandle = getProxyInt { GLES20.glGenTextures(1, it, 0) }
             GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureHandle)
@@ -149,25 +133,23 @@ internal class ImagineTexture @VisibleForTesting constructor(
             GLES20.glTexParameteri(
                 GLES20.GL_TEXTURE_2D,
                 GLES20.GL_TEXTURE_WRAP_S,
-                GLES20.GL_CLAMP_TO_EDGE
+                GLES20.GL_CLAMP_TO_EDGE,
             )
             GLES20.glTexParameteri(
                 GLES20.GL_TEXTURE_2D,
                 GLES20.GL_TEXTURE_WRAP_T,
-                GLES20.GL_CLAMP_TO_EDGE
+                GLES20.GL_CLAMP_TO_EDGE,
             )
             GLES20.glTexParameteri(
                 GLES20.GL_TEXTURE_2D,
                 GLES20.GL_TEXTURE_MAG_FILTER,
-                GLES20.GL_LINEAR
+                GLES20.GL_LINEAR,
             )
             GLES20.glTexParameteri(
                 GLES20.GL_TEXTURE_2D,
                 GLES20.GL_TEXTURE_MIN_FILTER,
-                if (mipmap) GLES20.GL_LINEAR_MIPMAP_LINEAR else GLES20.GL_LINEAR
+                if (mipmap) GLES20.GL_LINEAR_MIPMAP_LINEAR else GLES20.GL_LINEAR,
             )
         }
-
     }
-
 }

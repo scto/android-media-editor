@@ -4,8 +4,7 @@ import java.lang.ref.WeakReference
 import kotlin.reflect.KProperty
 
 /**
- * Create delegated read-only nullable property backed by a [WeakReference] to
- * a passed object
+ * Create delegated read-only nullable property backed by a [WeakReference] to a passed object
  *
  * @param obj The object to wrap in a [WeakReference]
  */

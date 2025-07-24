@@ -22,9 +22,10 @@ class CollageActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModels()
     private lateinit var binding: ActivityCollageBinding
 
-    private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) {
-        viewModel.gotImage(it)
-    }
+    private val pickMedia =
+        registerForActivityResult(ActivityResultContracts.PickVisualMedia()) {
+            viewModel.gotImage(it)
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +43,9 @@ class CollageActivity : AppCompatActivity() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.clickedImage.collect {
                     if (it == null) return@collect
-                    pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                    pickMedia.launch(
+                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                    )
                 }
             }
         }
@@ -50,7 +53,6 @@ class CollageActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_collage)
-        return navController.navigateUp(appBarConfiguration)
-                || super.onSupportNavigateUp()
+        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 }

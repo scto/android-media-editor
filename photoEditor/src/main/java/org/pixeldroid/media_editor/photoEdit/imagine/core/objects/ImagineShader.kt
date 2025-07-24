@@ -11,31 +11,25 @@ import org.pixeldroid.media_editor.photoEdit.imagine.util.getProxyInt
  * An abstraction for OpenGL Shaders and Shader Programs.
  *
  * This has 2 variants
- *  - [Compiled] which wraps a compiled shader
- *  - [Program] which is a linked shader capable of usage
+ * - [Compiled] which wraps a compiled shader
+ * - [Program] which is a linked shader capable of usage
  *
  * Create instances of [Compiled] using the companion function [compile]
  */
 sealed class ImagineShader {
 
-    /**
-     * Indicates whether this underlying resource is released
-     */
+    /** Indicates whether this underlying resource is released */
     protected var isReleased: Boolean = false
 
     /**
-     * Utility function to execute the block passed only if
-     * the underlying resource is not released
+     * Utility function to execute the block passed only if the underlying resource is not released
      *
      * @param block Lambda to be executed safely
-     *
      * @return A valid value returned from the lambda or null if released
      */
     protected fun <T> releaseSafe(block: () -> T?): T? = if (isReleased) null else block()
 
-    /**
-     * Releases all resources associated with this construct
-     */
+    /** Releases all resources associated with this construct */
     abstract fun release()
 
     /**
@@ -44,17 +38,14 @@ sealed class ImagineShader {
      * @property shader Handle to the underlying shader
      * @property type The type of shader it represents
      */
-    class Compiled @VisibleForTesting constructor(
-        private val shader: Int,
-        private val type: Type
-    ) : ImagineShader() {
+    class Compiled @VisibleForTesting constructor(private val shader: Int, private val type: Type) :
+        ImagineShader() {
 
         /**
          * Tries to link this compiled shader with another compiled shader
          *
          * @param other The other [ImagineShader.Compiled] to link with
          * @param releaseOnFailure Whether this shader should be deleted if the linking fails
-         *
          * @return Either a valid [ImagineShader.Program] or null if failed
          */
         fun linkWith(other: Compiled, releaseOnFailure: Boolean = false): Program? = releaseSafe {
@@ -101,16 +92,13 @@ sealed class ImagineShader {
             Program(program)
         }
 
-        /**
-         * Release the shader
-         */
+        /** Release the shader */
         override fun release() {
             releaseSafe {
                 GLES20.glDeleteShader(shader)
                 isReleased = true
             }
         }
-
     }
 
     /**
@@ -118,13 +106,9 @@ sealed class ImagineShader {
      *
      * @property program Handle to the underlying shader program
      */
-    class Program @VisibleForTesting constructor(
-        val program: Int
-    ) : ImagineShader() {
+    class Program @VisibleForTesting constructor(val program: Int) : ImagineShader() {
 
-        /**
-         * Release the shader program
-         */
+        /** Release the shader program */
         override fun release() {
             releaseSafe {
                 GLES20.glDeleteProgram(program)
@@ -132,27 +116,21 @@ sealed class ImagineShader {
             }
         }
 
-        /**
-         * Bind this shader program to the current context
-         */
-        fun use() = releaseSafe {
-            GLES20.glUseProgram(program)
-        }
-
+        /** Bind this shader program to the current context */
+        fun use() = releaseSafe { GLES20.glUseProgram(program) }
     }
 
-    /**
-     * Represents the type of shader
-     */
+    /** Represents the type of shader */
     enum class Type {
         Vertex,
         Fragment;
 
         val rawValue: Int
-            get() = when (this) {
-                Vertex -> GLES20.GL_VERTEX_SHADER
-                Fragment -> GLES20.GL_FRAGMENT_SHADER
-            }
+            get() =
+                when (this) {
+                    Vertex -> GLES20.GL_VERTEX_SHADER
+                    Fragment -> GLES20.GL_FRAGMENT_SHADER
+                }
     }
 
     companion object {
@@ -176,7 +154,7 @@ sealed class ImagineShader {
 
             // Handle compile error
             if (compileStatus != GLES20.GL_TRUE) {
-                //TODO
+                // TODO
                 val error = GLES20.glGetShaderInfoLog(shader)
 
                 // Useless leaving this shader in memory
@@ -187,7 +165,5 @@ sealed class ImagineShader {
 
             return Compiled(shader, type)
         }
-
     }
-
 }

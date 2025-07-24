@@ -20,28 +20,32 @@ class CollageFragment : Fragment() {
     private lateinit var binding: FragmentCollageBinding
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
     ): View {
         binding = FragmentCollageBinding.inflate(inflater, container, false)
         binding.collage1.setOnClickListener {
             val bundle = Bundle().apply { putInt(ACTION_IDENTIFIER, 1) }
-            findNavController().navigate(R.id.action_ChooseCollageFragment_to_ChooseImagesFragment1, bundle)
+            findNavController()
+                .navigate(R.id.action_ChooseCollageFragment_to_ChooseImagesFragment1, bundle)
         }
         binding.collage2.setOnClickListener {
             val bundle = Bundle().apply { putInt(ACTION_IDENTIFIER, 2) }
-            findNavController().navigate(R.id.action_ChooseCollageFragment_to_ChooseImagesFragment2, bundle)
+            findNavController()
+                .navigate(R.id.action_ChooseCollageFragment_to_ChooseImagesFragment2, bundle)
         }
         binding.collage3.setOnClickListener {
             val bundle = Bundle().apply { putInt(ACTION_IDENTIFIER, 3) }
-            findNavController().navigate(R.id.action_ChooseCollageFragment_to_ChooseImagesFragment3, bundle)
+            findNavController()
+                .navigate(R.id.action_ChooseCollageFragment_to_ChooseImagesFragment3, bundle)
         }
         binding.collage4.setOnClickListener {
             val bundle = Bundle().apply { putInt(ACTION_IDENTIFIER, 4) }
-            findNavController().navigate(R.id.action_ChooseCollageFragment_to_ChooseImagesFragment4, bundle)
+            findNavController()
+                .navigate(R.id.action_ChooseCollageFragment_to_ChooseImagesFragment4, bundle)
         }
 
         return binding.root
     }
-
 }

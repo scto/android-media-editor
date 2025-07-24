@@ -5,6 +5,8 @@ import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import android.os.Handler
 import android.os.Looper
+import javax.microedition.khronos.egl.EGLConfig
+import javax.microedition.khronos.opengles.GL10
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -25,17 +27,15 @@ import org.pixeldroid.media_editor.photoEdit.imagine.core.types.ImagineImageProv
 import org.pixeldroid.media_editor.photoEdit.imagine.core.types.ImagineLayer
 import org.pixeldroid.media_editor.photoEdit.imagine.core.types.ImagineMatrix
 import org.pixeldroid.media_editor.photoEdit.imagine.util.weakRefTo
-import javax.microedition.khronos.egl.EGLConfig
-import javax.microedition.khronos.opengles.GL10
 
 /**
- * The workhorse responsible for application of layers on a source bitmap
- * and either showing it on the viewport in "preview" mode or generating
- * a [Bitmap] on the UI thread in "export" mode.
+ * The workhorse responsible for application of layers on a source bitmap and either showing it on
+ * the viewport in "preview" mode or generating a [Bitmap] on the UI thread in "export" mode.
  *
  * It is powered OpenGL ES 2.0, thus uses the GPU to apply the layer effects
  *
  * Setup is done in 2 simple lines
+ *
  * ```
  * val engine = ImagineEngine(imagineView)
  * imagineView.engine = engine
@@ -45,32 +45,28 @@ import javax.microedition.khronos.opengles.GL10
  */
 class ImagineEngine(imagineView: ImagineView) {
 
-    /**
-     * Property to assign/query the layers applied on the image
-     */
+    /** Property to assign/query the layers applied on the image */
     var layers: List<ImagineLayer>?
         get() = state.layers
         set(value) {
             state = state.copy(layers = value)
         }
 
-    /**
-     * Property to set/get the image provider
-     */
+    /** Property to set/get the image provider */
     var imageProvider: ImagineImageProvider?
         get() = state.imageProvider
         set(value) {
-            state = state.copy(
-                imageProvider = value,
-                isPendingTextureUpdate = true,
-                isPendingTosschainUpdate = true,
-                isPendingAspectRatioMatrixUpdate = true,
-            )
+            state =
+                state.copy(
+                    imageProvider = value,
+                    isPendingTextureUpdate = true,
+                    isPendingTosschainUpdate = true,
+                    isPendingAspectRatioMatrixUpdate = true,
+                )
         }
 
     /**
-     * Property to set the lambda which will be called with the
-     * generated [Bitmap] in "export" mode
+     * Property to set the lambda which will be called with the generated [Bitmap] in "export" mode
      */
     var onBitmap: ((Bitmap?) -> Unit)?
         get() = state.onBitmap
@@ -79,8 +75,8 @@ class ImagineEngine(imagineView: ImagineView) {
         }
 
     /**
-     * Property to set the lambda which will be called with the
-     * generated [Bitmap]s in "thumbnails" mode
+     * Property to set the lambda which will be called with the generated [Bitmap]s in "thumbnails"
+     * mode
      */
     var onThumbnails: ((ArrayList<Bitmap?>) -> Unit)?
         get() = state.onThumbnails
@@ -88,23 +84,16 @@ class ImagineEngine(imagineView: ImagineView) {
             state = state.copy(onThumbnails = value)
         }
 
-    /**
-     * Holds a weak reference to the [ImagineView] used to
-     * dispatch commands
-     */
+    /** Holds a weak reference to the [ImagineView] used to dispatch commands */
     private val imagineView by weakRefTo(imagineView)
 
-    /**
-     * Holds the current [RenderContext] to use for drawing
-     */
+    /** Holds the current [RenderContext] to use for drawing */
     private var renderContext: RenderContext = Blank
 
     /**
-     * Holds the current [State] of this engine which are updates
-     * due to certain events.
+     * Holds the current [State] of this engine which are updates due to certain events.
      *
-     * Since the [renderContext] derives from this, it gets updated
-     * whenever this is updated.
+     * Since the [renderContext] derives from this, it gets updated whenever this is updated.
      */
     private var state: State = State()
         set(value) {
@@ -113,6 +102,7 @@ class ImagineEngine(imagineView: ImagineView) {
         }
 
     data class BitmapDimensions(val width: Int, val height: Int)
+
     private val _bitmapDimensions: MutableStateFlow<BitmapDimensions?> = MutableStateFlow(null)
     val bitmapDimensions: StateFlow<BitmapDimensions?> = _bitmapDimensions.asStateFlow()
 
@@ -124,19 +114,20 @@ class ImagineEngine(imagineView: ImagineView) {
 
             // Initialize the engine state to ready, with the essential
             // resources pre-allocated for later use
-            state = state.copy(
-                isReady = true,
-                shaderFactory = imagineView?.context?.let { ImagineLayerShaderFactory.create(it) },
-                quad = ImagineQuad.create(),
-            )
+            state =
+                state.copy(
+                    isReady = true,
+                    shaderFactory =
+                        imagineView?.context?.let { ImagineLayerShaderFactory.create(it) },
+                    quad = ImagineQuad.create(),
+                )
         }
 
         override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
             val oldDimensions = state.viewport?.dimensions
             val newDimensions = ImagineDimensions(width, height)
 
-            if (oldDimensions != newDimensions)
-                updateViewport(newDimensions)
+            if (oldDimensions != newDimensions) updateViewport(newDimensions)
         }
 
         override fun onDrawFrame(gl: GL10?) {
@@ -160,80 +151,67 @@ class ImagineEngine(imagineView: ImagineView) {
     }
 
     /**
-     * Invoke an export operation on the engine. It will
-     * generate a bitmap and call [onBitmap] lambda on the UI thread
+     * Invoke an export operation on the engine. It will generate a bitmap and call [onBitmap]
+     * lambda on the UI thread
      */
     fun exportBitmap(
         isThumbnail: Boolean = false,
         thumbnailSize: Int? = null,
         tbItemList: List<ImagineLayer>? = null,
-        onThumbnails: ((List<Bitmap?>) -> Unit)? = null
+        onThumbnails: ((List<Bitmap?>) -> Unit)? = null,
     ) {
         if ((!state.layers.isNullOrEmpty() && state.onBitmap != null) || isThumbnail) {
-            state = state.copy(
-                isPendingExport = true,
-                isThumbnail = isThumbnail,
-                thumbnailSize = thumbnailSize,
-                layers = tbItemList ?: state.layers,
-                onThumbnails = onThumbnails
-            )
+            state =
+                state.copy(
+                    isPendingExport = true,
+                    isThumbnail = isThumbnail,
+                    thumbnailSize = thumbnailSize,
+                    layers = tbItemList ?: state.layers,
+                    onThumbnails = onThumbnails,
+                )
             imagineView?.requestRender()
         }
     }
 
-    /**
-     * Updates the viewport with the layers applied on the
-     * source image
-     */
+    /** Updates the viewport with the layers applied on the source image */
     fun updatePreview() {
         imagineView?.requestRender()
     }
 
-    /**
-     * Update the clear color of OpenGL context
-     */
+    /** Update the clear color of OpenGL context */
     private fun updateSurfaceColor(color: Int) {
         val red = (color shr 16) and 0xFF
         val green = (color shr 8) and 0xFF
         val blue = color and 0xFF
 
-        GLES20.glClearColor(
-            red.toFloat() / 255,
-            green.toFloat() / 255,
-            blue.toFloat() / 255,
-            1.0f
-        )
+        GLES20.glClearColor(red.toFloat() / 255, green.toFloat() / 255, blue.toFloat() / 255, 1.0f)
     }
 
-    /**
-     * Run queued operations
-     */
+    /** Run queued operations */
     private fun runPendingOperations() {
         updateTexture()
         updateTosschain()
         updateAspectRatioMatrix()
     }
 
-    /**
-     * Update the source texture
-     */
+    /** Update the source texture */
     private fun updateTexture() {
         if (state.isPendingTextureUpdate) {
             state.image?.release()
 
-            state = state.copy(
-                isPendingTextureUpdate = false,
-                image = state.imageProvider?.bitmap?.let { bitmap ->
-                    _bitmapDimensions.value = BitmapDimensions(bitmap.width, bitmap.height)
-                    ImagineTexture.create(bitmap, mipmap = true, recycleBitmap = true)
-                },
-            )
+            state =
+                state.copy(
+                    isPendingTextureUpdate = false,
+                    image =
+                        state.imageProvider?.bitmap?.let { bitmap ->
+                            _bitmapDimensions.value = BitmapDimensions(bitmap.width, bitmap.height)
+                            ImagineTexture.create(bitmap, mipmap = true, recycleBitmap = true)
+                        },
+                )
         }
     }
 
-    /**
-     * Update the tosschain to accommodate for a new image and/or viewport
-     */
+    /** Update the tosschain to accommodate for a new image and/or viewport */
     private fun updateTosschain() {
         if (state.isPendingTosschainUpdate) {
             state.tosschain?.release()
@@ -241,35 +219,36 @@ class ImagineEngine(imagineView: ImagineView) {
             val texture = state.image
             val viewport = state.viewport
 
-            state = state.copy(
-                isPendingTosschainUpdate = false,
-                tosschain = if (texture != null && viewport != null)
-                    ImagineTosschain.create(
-                        texture.dimensions.fitInside(viewport.dimensions)
-                    )
-                else null,
-            )
+            state =
+                state.copy(
+                    isPendingTosschainUpdate = false,
+                    tosschain =
+                        if (texture != null && viewport != null)
+                            ImagineTosschain.create(
+                                texture.dimensions.fitInside(viewport.dimensions)
+                            )
+                        else null,
+                )
         }
     }
 
-    /**
-     * Updates the aspect ratio matrix whenever the image and/or viewport
-     * changes
-     */
+    /** Updates the aspect ratio matrix whenever the image and/or viewport changes */
     private fun updateAspectRatioMatrix() {
         if (state.isPendingAspectRatioMatrixUpdate) {
             val image = state.image
             val viewport = state.viewport
 
-            state = state.copy(
-                isPendingAspectRatioMatrixUpdate = false,
-                aspectRatioMatrix = if (image != null && viewport != null)
-                    ImagineMatrix.ofAspectFit(
-                        image.dimensions.aspectRatio,
-                        viewport.dimensions.aspectRatio
-                    )
-                else null,
-            )
+            state =
+                state.copy(
+                    isPendingAspectRatioMatrixUpdate = false,
+                    aspectRatioMatrix =
+                        if (image != null && viewport != null)
+                            ImagineMatrix.ofAspectFit(
+                                image.dimensions.aspectRatio,
+                                viewport.dimensions.aspectRatio,
+                            )
+                        else null,
+                )
         }
     }
 
@@ -279,16 +258,15 @@ class ImagineEngine(imagineView: ImagineView) {
      * @param dimensions The [ImagineDimensions] of the viewport
      */
     private fun updateViewport(dimensions: ImagineDimensions) {
-        state = state.copy(
-            viewport = ImagineViewport(dimensions),
-            isPendingTosschainUpdate = true,
-            isPendingAspectRatioMatrixUpdate = true,
-        )
+        state =
+            state.copy(
+                viewport = ImagineViewport(dimensions),
+                isPendingTosschainUpdate = true,
+                isPendingAspectRatioMatrixUpdate = true,
+            )
     }
 
-    /**
-     * Draw the layers
-     */
+    /** Draw the layers */
     private fun draw() {
         renderContext.draw()
 
@@ -299,32 +277,32 @@ class ImagineEngine(imagineView: ImagineView) {
     }
 
     /**
-     * Represents the current state of the engines. It holds all the
-     * information required for the engine in either "preview" or "export".
-     * It also helps in deriving a [RenderContext] from the internal state
+     * Represents the current state of the engines. It holds all the information required for the
+     * engine in either "preview" or "export". It also helps in deriving a [RenderContext] from the
+     * internal state
      *
      * @property mainThreadHandler Used to post [onBitmap] calls on the UI thread
      * @property isReady Whether the engine is ready yet
      * @property isPendingExport Whether an export operation is pending
-     * @property isPendingTextureUpdate Whether the [imageProvider] has been updated
-     * invoking a re-load of the source image texture
-     * @property isPendingTosschainUpdate Whether the [tosschain] needs to be updated
-     * due to a change in either [image] or [viewport]
-     * @property isPendingAspectRatioMatrixUpdate Whether the [aspectRatioMatrix] needs
-     * to be updated due to a change in either [image] or [viewport]
-     * @property quad A [ImagineQuad] object used to render the quad geometry representing
-     * the image canvas
-     * @property shaderFactory A [ImagineLayerShaderFactory] tasked to cache and supply
-     * linked shaders for corresponding layers and also a copy shader
+     * @property isPendingTextureUpdate Whether the [imageProvider] has been updated invoking a
+     *   re-load of the source image texture
+     * @property isPendingTosschainUpdate Whether the [tosschain] needs to be updated due to a
+     *   change in either [image] or [viewport]
+     * @property isPendingAspectRatioMatrixUpdate Whether the [aspectRatioMatrix] needs to be
+     *   updated due to a change in either [image] or [viewport]
+     * @property quad A [ImagineQuad] object used to render the quad geometry representing the image
+     *   canvas
+     * @property shaderFactory A [ImagineLayerShaderFactory] tasked to cache and supply linked
+     *   shaders for corresponding layers and also a copy shader
      * @property layers A list of [ImagineLayer]s which are applied on the image one after another
      * @property viewport A [ImagineViewport] to hold the current dimensions of the viewport
      * @property onBitmap A lambda that is called with a valid [Bitmap] in "export" mode
      * @property imageProvider An implementation of [ImagineImageProvider] to provide a [Bitmap]
      * @property image A [ImagineTexture] used to hold the mipmapped source image texture
-     * @property tosschain A [ImagineTosschain] used to apply an arbitrary number of
-     * layers one after another
-     * @property aspectRatioMatrix A [ImagineMatrix] used to maintain the aspect ratio of the
-     * image in the viewport
+     * @property tosschain A [ImagineTosschain] used to apply an arbitrary number of layers one
+     *   after another
+     * @property aspectRatioMatrix A [ImagineMatrix] used to maintain the aspect ratio of the image
+     *   in the viewport
      */
     internal data class State(
         val mainThreadHandler: Handler = Handler(Looper.getMainLooper()),
@@ -347,24 +325,23 @@ class ImagineEngine(imagineView: ImagineView) {
         val thumbnailSize: Int? = null,
     ) {
 
-        /**
-         * Obtain an instance of [RenderContext] based on the current
-         * engine state
-         */
+        /** Obtain an instance of [RenderContext] based on the current engine state */
         val renderContext: RenderContext
             get() {
                 // Unless the required conditions are met, just display a blank screen
-                if (!isReady
-                    || isPendingTextureUpdate
-                    || isPendingTosschainUpdate
-                    || isPendingAspectRatioMatrixUpdate
-                    || quad == null
-                    || viewport == null
-                    || tosschain == null
-                    || shaderFactory == null
-                    || image == null
-                    || aspectRatioMatrix == null
-                ) return RenderContext.Blank
+                if (
+                    !isReady ||
+                        isPendingTextureUpdate ||
+                        isPendingTosschainUpdate ||
+                        isPendingAspectRatioMatrixUpdate ||
+                        quad == null ||
+                        viewport == null ||
+                        tosschain == null ||
+                        shaderFactory == null ||
+                        image == null ||
+                        aspectRatioMatrix == null
+                )
+                    return RenderContext.Blank
 
                 // Export mode
                 if (isPendingExport && !layers.isNullOrEmpty() && onBitmap != null && !isThumbnail)
@@ -374,7 +351,7 @@ class ImagineEngine(imagineView: ImagineView) {
                         shaderFactory,
                         layers,
                         mainThreadHandler,
-                        onBitmap
+                        onBitmap,
                     )
 
                 if (isPendingExport && onThumbnails != null && isThumbnail)
@@ -385,7 +362,7 @@ class ImagineEngine(imagineView: ImagineView) {
                         layers,
                         onThumbnails,
                         thumbnailSize,
-                        aspectRatioMatrix
+                        aspectRatioMatrix,
                     )
 
                 // Normal preview mode
@@ -399,7 +376,6 @@ class ImagineEngine(imagineView: ImagineView) {
                     aspectRatioMatrix,
                 )
             }
-
     }
 
     /**
@@ -410,9 +386,7 @@ class ImagineEngine(imagineView: ImagineView) {
      */
     internal sealed class RenderContext {
 
-        /**
-         * Draw the layers
-         */
+        /** Draw the layers */
         abstract fun draw()
 
         /**
@@ -451,35 +425,33 @@ class ImagineEngine(imagineView: ImagineView) {
             quad.draw()
         }
 
-        /**
-         * Just clear the screen and do nothing else
-         */
+        /** Just clear the screen and do nothing else */
         internal object Blank : RenderContext() {
 
             override fun draw() {
                 ImagineFramebuffer.default.bind()
                 GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT)
             }
-
         }
 
         /**
-         * Update the viewport with the final image after layers have been applied.
-         * If no layers then just copy the source image into the viewport
+         * Update the viewport with the final image after layers have been applied. If no layers
+         * then just copy the source image into the viewport
          *
-         * @property quad A [ImagineQuad] object used to render the quad geometry representing
-         * the image canvas
-         * @property shaderFactory A [ImagineLayerShaderFactory] tasked to cache and supply
-         * linked shaders for corresponding layers and also a copy shader
-         * @property layers A list of [ImagineLayer]s which are applied on the image one after another
+         * @property quad A [ImagineQuad] object used to render the quad geometry representing the
+         *   image canvas
+         * @property shaderFactory A [ImagineLayerShaderFactory] tasked to cache and supply linked
+         *   shaders for corresponding layers and also a copy shader
+         * @property layers A list of [ImagineLayer]s which are applied on the image one after
+         *   another
          * @property viewport A [ImagineViewport] to hold the current dimensions of the viewport
          * @property onBitmap A lambda that is called with a valid [Bitmap] in "export" mode
          * @property imageProvider An implementation of [ImagineImageProvider] to provide a [Bitmap]
          * @property image A [ImagineTexture] used to hold the mipmapped source image texture
-         * @property tosschain A [ImagineTosschain] used to apply an arbitrary number of
-         * layers one after another
+         * @property tosschain A [ImagineTosschain] used to apply an arbitrary number of layers one
+         *   after another
          * @property aspectRatioMatrix A [ImagineMatrix] used to maintain the aspect ratio of the
-         * image in the viewport
+         *   image in the viewport
          */
         internal class Preview(
             private val quad: ImagineQuad,
@@ -524,11 +496,12 @@ class ImagineEngine(imagineView: ImagineView) {
 
                         if (shader == null) {
                             // Render a copy of the source
-                            //TODO make error show up in UI somehow
+                            // TODO make error show up in UI somehow
                             drawActual(
                                 quad,
                                 shaderFactory.bypassShader,
-                                if (isFrontBuffer) ImagineFramebuffer.default else tosschain.framebuffer,
+                                if (isFrontBuffer) ImagineFramebuffer.default
+                                else tosschain.framebuffer,
                                 if (isFrontBuffer) viewport.dimensions else tosschain.dimensions,
                                 if (isSourceImage) image else tosschain.texture,
                                 if (isFrontBuffer) aspectRatioMatrix else ImagineMatrix.identity,
@@ -547,7 +520,8 @@ class ImagineEngine(imagineView: ImagineView) {
                         drawActual(
                             quad,
                             shader,
-                            if (isFrontBuffer) ImagineFramebuffer.default else tosschain.framebuffer,
+                            if (isFrontBuffer) ImagineFramebuffer.default
+                            else tosschain.framebuffer,
                             if (isFrontBuffer) viewport.dimensions else tosschain.dimensions,
                             if (isSourceImage) image else tosschain.texture,
                             if (isFrontBuffer) aspectRatioMatrix else ImagineMatrix.identity,
@@ -561,19 +535,19 @@ class ImagineEngine(imagineView: ImagineView) {
                     }
                 }
             }
-
         }
 
         /**
-         * Render the layers into a back-buffer and call a lambda with the
-         * [Bitmap] extracted from it
+         * Render the layers into a back-buffer and call a lambda with the [Bitmap] extracted from
+         * it
          *
          * @property mainThreadHandler Used to post [onBitmap] calls on the UI thread
-         * @property quad A [ImagineQuad] object used to render the quad geometry representing
-         * the image canvas
-         * @property shaderFactory A [ImagineLayerShaderFactory] tasked to cache and supply
-         * linked shaders for corresponding layers and also a copy shader
-         * @property layers A list of [ImagineLayer]s which are applied on the image one after another
+         * @property quad A [ImagineQuad] object used to render the quad geometry representing the
+         *   image canvas
+         * @property shaderFactory A [ImagineLayerShaderFactory] tasked to cache and supply linked
+         *   shaders for corresponding layers and also a copy shader
+         * @property layers A list of [ImagineLayer]s which are applied on the image one after
+         *   another
          * @property onBitmap A lambda that is called with a valid [Bitmap] in "export" mode
          * @property imageProvider An implementation of [ImagineImageProvider] to provide a [Bitmap]
          * @property image A [ImagineTexture] used to hold the mipmapped source image texture
@@ -633,11 +607,8 @@ class ImagineEngine(imagineView: ImagineView) {
                 tosschain.release()
 
                 // Post the bitmap on the lambda in the UI thread
-                mainThreadHandler.post {
-                    onBitmap(bitmap)
-                }
+                mainThreadHandler.post { onBitmap(bitmap) }
             }
-
         }
 
         internal class ExportThumbnails(
@@ -675,7 +646,6 @@ class ImagineEngine(imagineView: ImagineView) {
                 // Obtain the bitmap
                 bitmaps.add(tosschain.bitmap)
 
-
                 layers?.forEach { layer ->
                     // Obtain the shader, otherwise skip this layer
                     val shader = shaderFactory.getLayerShader(layer)
@@ -707,15 +677,12 @@ class ImagineEngine(imagineView: ImagineView) {
                     bitmaps.add(tosschain.bitmap)
                 }
 
-
                 // Free the temporary tosschain
                 tosschain.release()
 
                 // Post the bitmaps on the lambda
                 onThumbnails(bitmaps)
             }
-
         }
     }
-
 }
