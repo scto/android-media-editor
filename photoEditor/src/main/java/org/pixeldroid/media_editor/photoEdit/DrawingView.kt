@@ -16,8 +16,9 @@ class DrawingView(context: Context?, attrs: AttributeSet?) : View(context, attrs
 
     private var model: PhotoEditViewModel? = null
 
-    //TODO
-    // How to do editing of previous text? Moving text? Draggable UI thingie at begin of text (x, y)?
+    // TODO
+    // How to do editing of previous text? Moving text? Draggable UI thingie at begin of text (x,
+    // y)?
 
     init {
         paint.apply {
@@ -34,20 +35,20 @@ class DrawingView(context: Context?, attrs: AttributeSet?) : View(context, attrs
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        model?.drawingPath?.let {
-            canvas.drawPath(it, paint)
-        }
+        model?.drawingPath?.let { canvas.drawPath(it, paint) }
         model?.textList?.forEach { positionString ->
-            canvas.drawText(positionString.string,
-                positionString.x * width, positionString.y * height,
-                textPaint.apply { textSize = (width * 0.1).toFloat() }
+            canvas.drawText(
+                positionString.string,
+                positionString.x * width,
+                positionString.y * height,
+                textPaint.apply { textSize = (width * 0.1).toFloat() },
             )
         }
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
 
-        when(model?.shownView?.value){
+        when (model?.shownView?.value) {
             PhotoEditViewModel.ShownView.Draw -> touchEventDraw(event)
             PhotoEditViewModel.ShownView.Text -> touchEventText(event)
             PhotoEditViewModel.ShownView.Sticker -> touchEventSticker(event)
@@ -75,8 +76,8 @@ class DrawingView(context: Context?, attrs: AttributeSet?) : View(context, attrs
 
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {}
-            MotionEvent.ACTION_MOVE -> {} //TODO
-            MotionEvent.ACTION_UP ->  {
+            MotionEvent.ACTION_MOVE -> {} // TODO
+            MotionEvent.ACTION_UP -> {
                 val editText = EditText(context)
 
                 MaterialAlertDialogBuilder(context)
@@ -87,7 +88,9 @@ class DrawingView(context: Context?, attrs: AttributeSet?) : View(context, attrs
                         val text = editText.text.toString()
                         model?.doChange(
                             PhotoEditViewModel.Change.PositionText(
-                                text, x/this@DrawingView.width, y/this@DrawingView.height
+                                text,
+                                x / this@DrawingView.width,
+                                y / this@DrawingView.height,
                             )
                         )
                         this@DrawingView.invalidate()
@@ -106,7 +109,7 @@ class DrawingView(context: Context?, attrs: AttributeSet?) : View(context, attrs
             MotionEvent.ACTION_DOWN -> {}
             MotionEvent.ACTION_MOVE -> {}
             MotionEvent.ACTION_UP -> {
-                model?.chooseSticker(x/this@DrawingView.width, y/this@DrawingView.height)
+                model?.chooseSticker(x / this@DrawingView.width, y / this@DrawingView.height)
             }
         }
     }
@@ -116,7 +119,7 @@ class DrawingView(context: Context?, attrs: AttributeSet?) : View(context, attrs
         invalidate()
     }
 
-    fun setModel(model: PhotoEditViewModel){
+    fun setModel(model: PhotoEditViewModel) {
         this.model = model
     }
 }

@@ -4,7 +4,6 @@ package org.pixeldroid.media_editor.videoEdit.cropper
 // licensed under the Apache License, Version 2.0. The modifications made to it for PixelDroid
 // are under licensed under the GPLv3 or later, just like the rest of the PixelDroid project
 
-
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.Canvas
@@ -16,45 +15,46 @@ import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
-import org.pixeldroid.media_editor.videoEdit.VideoEditActivity.RelativeCropPosition
 import kotlin.math.max
 import kotlin.math.min
+import org.pixeldroid.media_editor.videoEdit.VideoEditActivity.RelativeCropPosition
 
-/** A custom View representing the crop window and the shaded background outside the crop window.  */
-class CropOverlayView
-@JvmOverloads constructor(context: Context?, attrs: AttributeSet? = null) : View(context, attrs) {
+/** A custom View representing the crop window and the shaded background outside the crop window. */
+class CropOverlayView @JvmOverloads constructor(context: Context?, attrs: AttributeSet? = null) :
+    View(context, attrs) {
     // region: Fields and Consts
-    /** Handler from crop window stuff, moving and knowing position.  */
+    /** Handler from crop window stuff, moving and knowing position. */
     private val mCropWindowHandler = CropWindowHandler()
 
-    /** The Paint used to draw the white rectangle around the crop area.  */
+    /** The Paint used to draw the white rectangle around the crop area. */
     private var mBorderPaint: Paint? = null
 
-    /** The Paint used to draw the corners of the Border  */
+    /** The Paint used to draw the corners of the Border */
     private var mBorderCornerPaint: Paint? = null
 
-    /** The Paint used to draw the guidelines within the crop area when pressed.  */
+    /** The Paint used to draw the guidelines within the crop area when pressed. */
     private var mGuidelinePaint: Paint? = null
 
-    /** The bounding box around the Bitmap that we are cropping.  */
+    /** The bounding box around the Bitmap that we are cropping. */
     private val mCalcBounds = RectF()
 
-    /** The bounding image view width used to know the crop overlay is at view edges.  */
+    /** The bounding image view width used to know the crop overlay is at view edges. */
     private var mViewWidth = 0
 
-    /** The bounding image view height used to know the crop overlay is at view edges.  */
+    /** The bounding image view height used to know the crop overlay is at view edges. */
     private var mViewHeight = 0
 
-    /** The Handle that is currently pressed; null if no Handle is pressed.  */
+    /** The Handle that is currently pressed; null if no Handle is pressed. */
     private var mMoveHandler: CropWindowMoveHandler? = null
 
-    /** the initial crop window rectangle to set  */
+    /** the initial crop window rectangle to set */
     private val mInitialCropWindowRect = Rect()
 
-    /** Whether the Crop View has been initialized for the first time  */
+    /** Whether the Crop View has been initialized for the first time */
     private var initializedCropWindow = false
-    /** Get the left/top/right/bottom coordinates of the crop window.  */
-    /** Set the left/top/right/bottom coordinates of the crop window.  */
+
+    /** Get the left/top/right/bottom coordinates of the crop window. */
+    /** Set the left/top/right/bottom coordinates of the crop window. */
     var cropWindowRect: RectF
         get() = mCropWindowHandler.rect
         set(rect) {
@@ -77,7 +77,7 @@ class CropOverlayView
         }
     }
 
-    /** Resets the crop overlay view.  */
+    /** Resets the crop overlay view. */
     fun resetCropOverlayView() {
         if (initializedCropWindow) {
             cropWindowRect = RectF()
@@ -93,8 +93,9 @@ class CropOverlayView
     fun setCropWindowLimits(maxWidth: Float, maxHeight: Float) {
         mCropWindowHandler.setCropWindowLimits(maxWidth, maxHeight)
     }
-    /** Get crop window initial rectangle.  */
-    /** Set crop window initial rectangle to be used instead of default.  */
+
+    /** Get crop window initial rectangle. */
+    /** Set crop window initial rectangle to be used instead of default. */
     var initialCropWindowRect: Rect
         get() = mInitialCropWindowRect
         set(rect) {
@@ -106,16 +107,23 @@ class CropOverlayView
         }
 
     fun setRecordedCropWindowRect(relativeCropPosition: RelativeCropPosition) {
-        val rect = RectF(
-            mInitialCropWindowRect.left + relativeCropPosition.relativeX * mInitialCropWindowRect.width(),
-            mInitialCropWindowRect.top + relativeCropPosition.relativeY * mInitialCropWindowRect.height(),
-            relativeCropPosition.relativeWidth * mInitialCropWindowRect.width() + mInitialCropWindowRect.left + relativeCropPosition.relativeX * mInitialCropWindowRect.width(),
-            relativeCropPosition.relativeHeight * mInitialCropWindowRect.height() + mInitialCropWindowRect.top + relativeCropPosition.relativeY * mInitialCropWindowRect.height()
-        )
+        val rect =
+            RectF(
+                mInitialCropWindowRect.left +
+                    relativeCropPosition.relativeX * mInitialCropWindowRect.width(),
+                mInitialCropWindowRect.top +
+                    relativeCropPosition.relativeY * mInitialCropWindowRect.height(),
+                relativeCropPosition.relativeWidth * mInitialCropWindowRect.width() +
+                    mInitialCropWindowRect.left +
+                    relativeCropPosition.relativeX * mInitialCropWindowRect.width(),
+                relativeCropPosition.relativeHeight * mInitialCropWindowRect.height() +
+                    mInitialCropWindowRect.top +
+                    relativeCropPosition.relativeY * mInitialCropWindowRect.height(),
+            )
         mCropWindowHandler.rect = rect
     }
 
-    /** Reset crop window to initial rectangle.  */
+    /** Reset crop window to initial rectangle. */
     fun resetCropWindowRect() {
         if (initializedCropWindow) {
             initCropWindow()
@@ -124,24 +132,28 @@ class CropOverlayView
     }
 
     /**
-     * Sets all initial values, but does not call initCropWindow to reset the views.<br></br>
-     * Used once at the very start to initialize the attributes.
+     * Sets all initial values, but does not call initCropWindow to reset the views.<br></br> Used
+     * once at the very start to initialize the attributes.
      */
     fun setInitialAttributeValues() {
         val dm = Resources.getSystem().displayMetrics
-        mBorderPaint = getNewPaintOfThickness(
-            TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 3f, dm),
-            Color.argb(170, 255, 255, 255)
-        )
-        mBorderCornerPaint = getNewPaintOfThickness(
-            TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2f, dm),
-            Color.WHITE
-        )
-        mGuidelinePaint = getNewPaintOfThickness(
-            TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1f, dm),
-            Color.argb(170, 255, 255, 255)
-        )
+        mBorderPaint =
+            getNewPaintOfThickness(
+                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 3f, dm),
+                Color.argb(170, 255, 255, 255),
+            )
+        mBorderCornerPaint =
+            getNewPaintOfThickness(
+                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2f, dm),
+                Color.WHITE,
+            )
+        mGuidelinePaint =
+            getNewPaintOfThickness(
+                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1f, dm),
+                Color.argb(170, 255, 255, 255),
+            )
     }
+
     // region: Private methods
     /**
      * Set the initial crop window size and position. This is dependent on the size and position of
@@ -163,7 +175,7 @@ class CropOverlayView
         mCropWindowHandler.rect = rect
     }
 
-    /** Fix the given rect to fit into bitmap rect and follow min, max and aspect ratio rules.  */
+    /** Fix the given rect to fit into bitmap rect and follow min, max and aspect ratio rules. */
     private fun fixCropWindowRectByRules(rect: RectF) {
         if (rect.width() < mCropWindowHandler.minCropWidth) {
             val adj = (mCropWindowHandler.minCropWidth - rect.width()) / 2
@@ -207,8 +219,8 @@ class CropOverlayView
     }
 
     /**
-     * Draw crop overview by drawing background over image not in the cropping area, then borders and
-     * guidelines.
+     * Draw crop overview by drawing background over image not in the cropping area, then borders
+     * and guidelines.
      */
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
@@ -226,7 +238,7 @@ class CropOverlayView
         drawCorners(canvas)
     }
 
-    /** Draw shadow background over the image not including the crop area.  */
+    /** Draw shadow background over the image not including the crop area. */
     private fun drawBackground(canvas: Canvas) {
         val rect = mCropWindowHandler.rect
         val background = getNewPaint(Color.argb(119, 0, 0, 0))
@@ -235,28 +247,28 @@ class CropOverlayView
             mInitialCropWindowRect.top.toFloat(),
             rect.left,
             mInitialCropWindowRect.bottom.toFloat(),
-            background
+            background,
         )
         canvas.drawRect(
             rect.left,
             rect.bottom,
             mInitialCropWindowRect.right.toFloat(),
             mInitialCropWindowRect.bottom.toFloat(),
-            background
+            background,
         )
         canvas.drawRect(
             rect.right,
             mInitialCropWindowRect.top.toFloat(),
             mInitialCropWindowRect.right.toFloat(),
             rect.bottom,
-            background
+            background,
         )
         canvas.drawRect(
             rect.left,
             mInitialCropWindowRect.top.toFloat(),
             rect.right,
             rect.top,
-            background
+            background,
         )
     }
 
@@ -286,7 +298,7 @@ class CropOverlayView
         }
     }
 
-    /** Draw borders of the crop area.  */
+    /** Draw borders of the crop area. */
     private fun drawBorders(canvas: Canvas) {
         if (mBorderPaint != null) {
             val w = mBorderPaint!!.strokeWidth
@@ -299,7 +311,7 @@ class CropOverlayView
         }
     }
 
-    /** Draw the corner of crop overlay.  */
+    /** Draw the corner of crop overlay. */
     private fun drawCorners(canvas: Canvas) {
         val dm = Resources.getSystem().displayMetrics
         if (mBorderCornerPaint != null) {
@@ -307,8 +319,8 @@ class CropOverlayView
             val cornerWidth = mBorderCornerPaint!!.strokeWidth
 
             // The corners should be a bit offset from the borders
-            val w = (cornerWidth / 2
-                    + TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5f, dm))
+            val w =
+                (cornerWidth / 2 + TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5f, dm))
             val rect = mCropWindowHandler.rect
             rect.inset(w, w)
             val cornerOffset = (cornerWidth - lineWidth) / 2
@@ -324,14 +336,14 @@ class CropOverlayView
                 rect.top - cornerExtension,
                 rect.left - cornerOffset,
                 rect.top + mBorderCornerLength,
-                mBorderCornerPaint!!
+                mBorderCornerPaint!!,
             )
             canvas.drawLine(
                 rect.left - cornerExtension,
                 rect.top - cornerOffset,
                 rect.left + mBorderCornerLength,
                 rect.top - cornerOffset,
-                mBorderCornerPaint!!
+                mBorderCornerPaint!!,
             )
 
             // Top right
@@ -340,14 +352,14 @@ class CropOverlayView
                 rect.top - cornerExtension,
                 rect.right + cornerOffset,
                 rect.top + mBorderCornerLength,
-                mBorderCornerPaint!!
+                mBorderCornerPaint!!,
             )
             canvas.drawLine(
                 rect.right + cornerExtension,
                 rect.top - cornerOffset,
                 rect.right - mBorderCornerLength,
                 rect.top - cornerOffset,
-                mBorderCornerPaint!!
+                mBorderCornerPaint!!,
             )
 
             // Bottom left
@@ -356,14 +368,14 @@ class CropOverlayView
                 rect.bottom + cornerExtension,
                 rect.left - cornerOffset,
                 rect.bottom - mBorderCornerLength,
-                mBorderCornerPaint!!
+                mBorderCornerPaint!!,
             )
             canvas.drawLine(
                 rect.left - cornerExtension,
                 rect.bottom + cornerOffset,
                 rect.left + mBorderCornerLength,
                 rect.bottom + cornerOffset,
-                mBorderCornerPaint!!
+                mBorderCornerPaint!!,
             )
 
             // Bottom left
@@ -372,14 +384,14 @@ class CropOverlayView
                 rect.bottom + cornerExtension,
                 rect.right + cornerOffset,
                 rect.bottom - mBorderCornerLength,
-                mBorderCornerPaint!!
+                mBorderCornerPaint!!,
             )
             canvas.drawLine(
                 rect.right + cornerExtension,
                 rect.bottom + cornerOffset,
                 rect.right - mBorderCornerLength,
                 rect.bottom + cornerOffset,
-                mBorderCornerPaint!!
+                mBorderCornerPaint!!,
             )
         }
     }
@@ -394,7 +406,8 @@ class CropOverlayView
                     true
                 }
 
-                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                MotionEvent.ACTION_UP,
+                MotionEvent.ACTION_CANCEL -> {
                     parent.requestDisallowInterceptTouchEvent(false)
                     onActionUp()
                     true
@@ -414,22 +427,23 @@ class CropOverlayView
     }
 
     /**
-     * On press down start crop window movement depending on the location of the press.<br></br>
-     * if press is far from crop window then no move handler is returned (null).
+     * On press down start crop window movement depending on the location of the press.<br></br> if
+     * press is far from crop window then no move handler is returned (null).
      */
     private fun onActionDown(x: Float, y: Float) {
         val dm = Resources.getSystem().displayMetrics
-        mMoveHandler = mCropWindowHandler.getMoveHandler(
-            x,
-            y,
-            TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24f, dm)
-        )
+        mMoveHandler =
+            mCropWindowHandler.getMoveHandler(
+                x,
+                y,
+                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24f, dm),
+            )
         if (mMoveHandler != null) {
             invalidate()
         }
     }
 
-    /** Clear move handler starting in [.onActionDown] if exists.  */
+    /** Clear move handler starting in [.onActionDown] if exists. */
     private fun onActionUp() {
         if (mMoveHandler != null) {
             mMoveHandler = null
@@ -438,8 +452,8 @@ class CropOverlayView
     }
 
     /**
-     * Handle move of crop window using the move handler created in [.onActionDown].<br></br>
-     * The move handler will do the proper move/resize of the crop window.
+     * Handle move of crop window using the move handler created in [.onActionDown].<br></br> The
+     * move handler will do the proper move/resize of the crop window.
      */
     private fun onActionMove(x: Float, y: Float) {
         if (mMoveHandler != null) {
@@ -447,37 +461,29 @@ class CropOverlayView
             setBounds()
             val dm = Resources.getSystem().displayMetrics
             val snapRadius = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 3f, dm)
-            mMoveHandler!!.move(
-                rect,
-                x,
-                y,
-                mCalcBounds,
-                mViewWidth,
-                mViewHeight,
-                snapRadius
-            )
+            mMoveHandler!!.move(rect, x, y, mCalcBounds, mViewWidth, mViewHeight, snapRadius)
             mCropWindowHandler.rect = rect
             invalidate()
         }
     }
 
     /**
-     * Calculate the bounding rectangle for current crop window
-     * The bounds rectangle is the bitmap rectangle
+     * Calculate the bounding rectangle for current crop window The bounds rectangle is the bitmap
+     * rectangle
      */
     private fun setBounds() {
         mCalcBounds.set(mInitialCropWindowRect)
     }
 
     companion object {
-        /** Creates the Paint object for drawing.  */
+        /** Creates the Paint object for drawing. */
         private fun getNewPaint(color: Int): Paint {
             val paint = Paint()
             paint.color = color
             return paint
         }
 
-        /** Creates the Paint object for given thickness and color  */
+        /** Creates the Paint object for given thickness and color */
         private fun getNewPaintOfThickness(thickness: Float, color: Int): Paint {
             val borderPaint = Paint()
             borderPaint.color = color

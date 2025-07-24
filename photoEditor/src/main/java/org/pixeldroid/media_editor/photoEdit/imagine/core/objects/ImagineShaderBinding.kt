@@ -61,7 +61,6 @@ internal sealed class ImagineShaderBinding(protected val location: Int) {
             GLES20.glActiveTexture(GLES20.GL_TEXTURE0 + index)
             texture.bind()
         }
-
     }
 
     /**
@@ -71,9 +70,7 @@ internal sealed class ImagineShaderBinding(protected val location: Int) {
      */
     class Attribute(location: Int) : ImagineShaderBinding(location) {
 
-        /**
-         * Enable the binding point as a vertex attribute array
-         */
+        /** Enable the binding point as a vertex attribute array */
         fun enable() {
             GLES20.glEnableVertexAttribArray(location)
         }
@@ -86,23 +83,12 @@ internal sealed class ImagineShaderBinding(protected val location: Int) {
          * @param offset Offset in bytes into the vertex buffer object
          */
         fun bindVBO(size: Int, stride: Int, offset: Int) {
-            GLES20.glVertexAttribPointer(
-                location,
-                size,
-                GLES20.GL_FLOAT,
-                false,
-                stride,
-                offset,
-            )
+            GLES20.glVertexAttribPointer(location, size, GLES20.GL_FLOAT, false, stride, offset)
         }
 
-        /**
-         * Disables the binding as a vertex attribute array
-         */
+        /** Disables the binding as a vertex attribute array */
         fun disable() {
             GLES20.glDisableVertexAttribArray(location)
         }
-
     }
-
 }

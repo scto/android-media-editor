@@ -11,14 +11,10 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface FiltersDao {
-    @Query("SELECT * FROM customfilter")
-    fun getAll(): Flow<List<CustomFilter>>
+    @Query("SELECT * FROM customfilter") fun getAll(): Flow<List<CustomFilter>>
 
-    /**
-     * Insert a user, if it already exists return -1
-     */
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(layers: CustomFilter): Long
+    /** Insert a user, if it already exists return -1 */
+    @Insert(onConflict = OnConflictStrategy.IGNORE) suspend fun insert(layers: CustomFilter): Long
 
     @Transaction
     suspend fun insertOrUpdate(filter: CustomFilter) {
@@ -27,9 +23,7 @@ interface FiltersDao {
         }
     }
 
-    @Update
-    suspend fun update(layers: CustomFilter)
+    @Update suspend fun update(layers: CustomFilter)
 
-    @Delete
-    fun delete(layer: CustomFilter)
+    @Delete fun delete(layer: CustomFilter)
 }

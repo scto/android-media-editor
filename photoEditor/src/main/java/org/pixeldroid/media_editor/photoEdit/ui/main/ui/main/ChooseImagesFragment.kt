@@ -11,7 +11,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
-import android.view.View.GONE
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -25,6 +24,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
+import java.util.SortedMap
 import kotlinx.coroutines.launch
 import org.pixeldroid.media_editor.photoEdit.R
 import org.pixeldroid.media_editor.photoEdit.databinding.FragmentCollageChooseImagesBinding
@@ -32,7 +32,6 @@ import org.pixeldroid.media_editor.photoEdit.getBitmap
 import org.pixeldroid.media_editor.photoEdit.sendBackImage
 import org.pixeldroid.media_editor.photoEdit.ui.main.ui.main.CollageFragment.Companion.ACTION_IDENTIFIER
 import org.pixeldroid.media_editor.photoEdit.writeBitmap
-import java.util.SortedMap
 
 class ChooseImagesFragment : Fragment() {
     private var whichCollage: Int? = null
@@ -42,8 +41,9 @@ class ChooseImagesFragment : Fragment() {
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
     ): View {
         binding = FragmentCollageChooseImagesBinding.inflate(inflater, container, false)
         whichCollage = arguments?.getInt(ACTION_IDENTIFIER)
@@ -93,11 +93,11 @@ class ChooseImagesFragment : Fragment() {
                     if (event.action == MotionEvent.ACTION_DOWN) {
                         if (event.y / v.height < 0.5 && event.x / v.width < 0.5) {
                             viewModel.clickedImage(1)
-                        } else if (event.y / v.height < 0.5 && event.x / v.width > 0.5){
+                        } else if (event.y / v.height < 0.5 && event.x / v.width > 0.5) {
                             viewModel.clickedImage(2)
-                        } else if (event.y / v.height > 0.5 && event.x / v.width < 0.5){
+                        } else if (event.y / v.height > 0.5 && event.x / v.width < 0.5) {
                             viewModel.clickedImage(3)
-                        } else if (event.y / v.height > 0.5 && event.x / v.width > 0.5){
+                        } else if (event.y / v.height > 0.5 && event.x / v.width > 0.5) {
                             viewModel.clickedImage(4)
                         }
                     }
@@ -119,13 +119,17 @@ class ChooseImagesFragment : Fragment() {
                         when (whichCollage) {
                             1 -> {
                                 binding.image.post {
-                                    scaledStickerWidth = if (whichImage == 1) binding.image.width else (binding.image.width * 0.4).toInt()
-                                    scaledStickerHeight = if (whichImage == 1) binding.image.height else (binding.image.height * 0.4).toInt()
+                                    scaledStickerWidth =
+                                        if (whichImage == 1) binding.image.width
+                                        else (binding.image.width * 0.4).toInt()
+                                    scaledStickerHeight =
+                                        if (whichImage == 1) binding.image.height
+                                        else (binding.image.height * 0.4).toInt()
 
                                     val layoutParams =
                                         FrameLayout.LayoutParams(
                                             scaledStickerWidth,
-                                            scaledStickerHeight
+                                            scaledStickerHeight,
                                         )
                                     collageImageView.setLayoutParams(layoutParams)
                                     collageImageView.x = binding.image.x
@@ -141,10 +145,13 @@ class ChooseImagesFragment : Fragment() {
                                     val layoutParams =
                                         FrameLayout.LayoutParams(
                                             scaledStickerWidth,
-                                            scaledStickerHeight
+                                            scaledStickerHeight,
                                         )
                                     collageImageView.setLayoutParams(layoutParams)
-                                    collageImageView.x = binding.image.x + if(whichImage == 1) 0f else binding.image.width.toFloat() / 2
+                                    collageImageView.x =
+                                        binding.image.x +
+                                            if (whichImage == 1) 0f
+                                            else binding.image.width.toFloat() / 2
                                     collageImageView.y = binding.image.y
                                 }
                             }
@@ -156,11 +163,14 @@ class ChooseImagesFragment : Fragment() {
                                     val layoutParams =
                                         FrameLayout.LayoutParams(
                                             scaledStickerWidth,
-                                            scaledStickerHeight.toInt()
+                                            scaledStickerHeight.toInt(),
                                         )
                                     collageImageView.setLayoutParams(layoutParams)
                                     collageImageView.x = binding.image.x
-                                    collageImageView.y = binding.image.y + if(whichImage == 1) 0f else binding.image.height.toFloat() / 2
+                                    collageImageView.y =
+                                        binding.image.y +
+                                            if (whichImage == 1) 0f
+                                            else binding.image.height.toFloat() / 2
                                 }
                             }
 
@@ -172,25 +182,30 @@ class ChooseImagesFragment : Fragment() {
                                     val layoutParams =
                                         FrameLayout.LayoutParams(
                                             scaledStickerWidth,
-                                            scaledStickerHeight
+                                            scaledStickerHeight,
                                         )
                                     collageImageView.setLayoutParams(layoutParams)
-                                    collageImageView.x = binding.image.x + if(whichImage % 2 == 1) 0f else binding.image.width.toFloat() / 2
-                                    collageImageView.y = binding.image.y + if(whichImage <= 2) 0f else binding.image.height.toFloat() / 2
-
+                                    collageImageView.x =
+                                        binding.image.x +
+                                            if (whichImage % 2 == 1) 0f
+                                            else binding.image.width.toFloat() / 2
+                                    collageImageView.y =
+                                        binding.image.y +
+                                            if (whichImage <= 2) 0f
+                                            else binding.image.height.toFloat() / 2
                                 }
                             }
                         }
 
-                       collageImageView.adjustViewBounds = true
-                       collageImageView.scaleType = ImageView.ScaleType.CENTER_CROP
+                        collageImageView.adjustViewBounds = true
+                        collageImageView.scaleType = ImageView.ScaleType.CENTER_CROP
 
                         binding.collageFrameLayout.addView(collageImageView)
-                        Glide.with(this@ChooseImagesFragment).load(uri)
-                           // .override(scaledStickerWidth, scaledStickerHeight)
+                        Glide.with(this@ChooseImagesFragment)
+                            .load(uri)
+                            // .override(scaledStickerWidth, scaledStickerHeight)
                             .into(collageImageView)
                         binding.collageFrameLayout.requestLayout()
-
                     }
                 }
             }
@@ -198,39 +213,51 @@ class ChooseImagesFragment : Fragment() {
 
         val menuHost: MenuHost = requireActivity()
 
-        menuHost.addMenuProvider(object : MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menuInflater.inflate(R.menu.menu_collage, menu)
-            }
-
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                return when (menuItem.itemId) {
-                    R.id.action_save_collage -> {
-                        createPhotoContract.launch("collage.png")
-                        true
-                    }
-                    else -> false
+        menuHost.addMenuProvider(
+            object : MenuProvider {
+                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                    menuInflater.inflate(R.menu.menu_collage, menu)
                 }
-            }
-        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+
+                override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                    return when (menuItem.itemId) {
+                        R.id.action_save_collage -> {
+                            createPhotoContract.launch("collage.png")
+                            true
+                        }
+                        else -> false
+                    }
+                }
+            },
+            viewLifecycleOwner,
+            Lifecycle.State.RESUMED,
+        )
 
         return binding.root
     }
+
     private val createPhotoContract =
-        registerForActivityResult(ActivityResultContracts.CreateDocument("image/png")) { newFileUri: Uri? ->
+        registerForActivityResult(ActivityResultContracts.CreateDocument("image/png")) {
+            newFileUri: Uri? ->
             if (newFileUri != null) {
                 lifecycleScope.launch {
                     saveCollage(newFileUri, viewModel.imageUris.value, whichCollage!!)
                 }
             } else {
                 Snackbar.make(
-                    binding.root, getString(R.string.save_image_failed),
-                    Snackbar.LENGTH_LONG
-                ).show()
+                        binding.root,
+                        getString(R.string.save_image_failed),
+                        Snackbar.LENGTH_LONG,
+                    )
+                    .show()
             }
         }
 
-    private suspend fun saveCollage(targetUri: Uri, images: SortedMap<Int, Uri>, whichCollage: Int) {
+    private suspend fun saveCollage(
+        targetUri: Uri,
+        images: SortedMap<Int, Uri>,
+        whichCollage: Int,
+    ) {
         val width = 2000
         val height = 2000
 
@@ -262,9 +289,9 @@ class ChooseImagesFragment : Fragment() {
                     if (collageBitmap != null) {
                         canvas.drawBitmap(
                             collageBitmap,
-                            if(whichImage == 1) 0f else width.toFloat() / 2,
+                            if (whichImage == 1) 0f else width.toFloat() / 2,
                             0f,
-                            null
+                            null,
                         )
                     }
                 }
@@ -276,10 +303,12 @@ class ChooseImagesFragment : Fragment() {
                         getBitmap(requireContext(), uri, bitmapWidth, bitmapHeight.toInt())
 
                     if (collageBitmap != null) {
-                        canvas.drawBitmap(collageBitmap,
+                        canvas.drawBitmap(
+                            collageBitmap,
                             0f,
-                            if(whichImage == 1) 0f else height.toFloat() / 2,
-                            null)
+                            if (whichImage == 1) 0f else height.toFloat() / 2,
+                            null,
+                        )
                     }
                 }
 
@@ -291,10 +320,12 @@ class ChooseImagesFragment : Fragment() {
                         getBitmap(requireContext(), uri, bitmapWidth.toInt(), bitmapHeight.toInt())
 
                     if (collageBitmap != null) {
-                        canvas.drawBitmap(collageBitmap,
-                            if(whichImage % 2 == 1) 0f else width.toFloat() / 2,
-                            if(whichImage <= 2) 0f else height.toFloat() / 2,
-                            null)
+                        canvas.drawBitmap(
+                            collageBitmap,
+                            if (whichImage % 2 == 1) 0f else width.toFloat() / 2,
+                            if (whichImage <= 2) 0f else height.toFloat() / 2,
+                            null,
+                        )
                     }
                 }
             }

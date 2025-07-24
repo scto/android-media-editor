@@ -21,11 +21,9 @@ import com.bumptech.glide.request.target.Target
 import org.pixeldroid.media_editor.videoEdit.VideoEditActivity
 import org.pixeldroid.media_editor.videoEdit.databinding.CropImageViewBinding
 
-
-/** Custom view that provides cropping capabilities to an image.  */
+/** Custom view that provides cropping capabilities to an image. */
 class CropImageView @JvmOverloads constructor(context: Context?, attrs: AttributeSet? = null) :
     FrameLayout(context!!, attrs) {
-
 
     private val binding: CropImageViewBinding =
         CropImageViewBinding.inflate(LayoutInflater.from(context), this, true)
@@ -42,8 +40,7 @@ class CropImageView @JvmOverloads constructor(context: Context?, attrs: Attribut
     val cropWindowRect: RectF
         get() = binding.CropOverlayView.cropWindowRect
 
-
-    /** Reset crop window to initial rectangle.  */
+    /** Reset crop window to initial rectangle. */
     fun resetCropRect() {
         binding.CropOverlayView.resetCropWindowRect()
     }
@@ -59,47 +56,57 @@ class CropImageView @JvmOverloads constructor(context: Context?, attrs: Attribut
         // either no existing task is working or we canceled it, need to load new URI
         binding.CropOverlayView.initialCropWindowRect = Rect()
 
-        Glide.with(this).load(uri).fitCenter().listener(object : RequestListener<Drawable> {
-            override fun onLoadFailed(
-                e: GlideException?,
-                m: Any?,
-                t: Target<Drawable>,
-                i: Boolean,
-            ): Boolean {
-                return false
-            }
+        Glide.with(this)
+            .load(uri)
+            .fitCenter()
+            .listener(
+                object : RequestListener<Drawable> {
+                    override fun onLoadFailed(
+                        e: GlideException?,
+                        m: Any?,
+                        t: Target<Drawable>,
+                        i: Boolean,
+                    ): Boolean {
+                        return false
+                    }
 
-            override fun onResourceReady(
-                resource: Drawable,
-                model: Any,
-                target: Target<Drawable>?,
-                dataSource: DataSource,
-                isFirstResource: Boolean
-            ): Boolean {
-                // Get width and height that the image will take on the screen
-                val drawnWidth = resource.intrinsicWidth ?: width
-                val drawnHeight = resource.intrinsicHeight ?: height
+                    override fun onResourceReady(
+                        resource: Drawable,
+                        model: Any,
+                        target: Target<Drawable>?,
+                        dataSource: DataSource,
+                        isFirstResource: Boolean,
+                    ): Boolean {
+                        // Get width and height that the image will take on the screen
+                        val drawnWidth = resource.intrinsicWidth ?: width
+                        val drawnHeight = resource.intrinsicHeight ?: height
 
-                binding.CropOverlayView.initialCropWindowRect = RectF(
-                    (width - drawnWidth) / 2f,
-                    (height - drawnHeight) / 2f,
-                    (width + drawnWidth) / 2f,
-                    (height + drawnHeight) / 2f
-                ).toRect()
-                binding.CropOverlayView.setCropWindowLimits(
-                    drawnWidth.toFloat(),
-                    drawnHeight.toFloat()
-                )
-                binding.CropOverlayView.invalidate()
-                binding.CropOverlayView.setBounds(width, height)
-                binding.CropOverlayView.resetCropOverlayView()
-                if (!cropRelativeDimensions.notCropped()) binding.CropOverlayView.setRecordedCropWindowRect(cropRelativeDimensions)
-                binding.CropOverlayView.visibility = VISIBLE
+                        binding.CropOverlayView.initialCropWindowRect =
+                            RectF(
+                                    (width - drawnWidth) / 2f,
+                                    (height - drawnHeight) / 2f,
+                                    (width + drawnWidth) / 2f,
+                                    (height + drawnHeight) / 2f,
+                                )
+                                .toRect()
+                        binding.CropOverlayView.setCropWindowLimits(
+                            drawnWidth.toFloat(),
+                            drawnHeight.toFloat(),
+                        )
+                        binding.CropOverlayView.invalidate()
+                        binding.CropOverlayView.setBounds(width, height)
+                        binding.CropOverlayView.resetCropOverlayView()
+                        if (!cropRelativeDimensions.notCropped())
+                            binding.CropOverlayView.setRecordedCropWindowRect(
+                                cropRelativeDimensions
+                            )
+                        binding.CropOverlayView.visibility = VISIBLE
 
-
-                // Indicate to Glide that the image hasn't been set yet
-                return false
-            }
-        }).into(binding.ImageViewImage)
+                        // Indicate to Glide that the image hasn't been set yet
+                        return false
+                    }
+                }
+            )
+            .into(binding.ImageViewImage)
     }
 }

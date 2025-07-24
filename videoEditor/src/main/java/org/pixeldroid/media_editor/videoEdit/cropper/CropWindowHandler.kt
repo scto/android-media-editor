@@ -4,7 +4,6 @@ package org.pixeldroid.media_editor.videoEdit.cropper
 // licensed under the Apache License, Version 2.0. The modifications made to it for PixelDroid
 // are under licensed under the GPLv3 or later, just like the rest of the PixelDroid project
 
-
 import android.content.res.Resources
 import android.graphics.RectF
 import android.util.TypedValue
@@ -12,9 +11,9 @@ import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
-/** Handler from crop window stuff, moving and knowing position.  */
+/** Handler from crop window stuff, moving and knowing position. */
 internal class CropWindowHandler {
-    /** The 4 edges of the crop window defining its coordinates and size  */
+    /** The 4 edges of the crop window defining its coordinates and size */
     private val mEdges = RectF()
 
     /**
@@ -23,13 +22,13 @@ internal class CropWindowHandler {
      */
     private val mGetEdges = RectF()
 
-    /** Maximum width in pixels that the crop window can CURRENTLY get.  */
+    /** Maximum width in pixels that the crop window can CURRENTLY get. */
     private var mMaxCropWindowWidth = 0f
 
-    /** Maximum height in pixels that the crop window can CURRENTLY get.  */
+    /** Maximum height in pixels that the crop window can CURRENTLY get. */
     private var mMaxCropWindowHeight = 0f
 
-    /** The left/top/right/bottom coordinates of the crop window.  */
+    /** The left/top/right/bottom coordinates of the crop window. */
     var rect: RectF
         get() {
             mGetEdges.set(mEdges)
@@ -39,36 +38,36 @@ internal class CropWindowHandler {
             mEdges.set(rect)
         }
 
-    /** Minimum width in pixels that the crop window can get.  */
+    /** Minimum width in pixels that the crop window can get. */
     val minCropWidth: Float
         get() {
             val dm = Resources.getSystem().displayMetrics
             val mMinCropResultWidth = 40f
             return max(
                 TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 42f, dm).toInt().toFloat(),
-                mMinCropResultWidth
+                mMinCropResultWidth,
             )
         }
 
-    /** Minimum height in pixels that the crop window can get.  */
+    /** Minimum height in pixels that the crop window can get. */
     val minCropHeight: Float
         get() {
             val dm = Resources.getSystem().displayMetrics
             val mMinCropResultHeight = 40f
             return max(
                 TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 42f, dm).toInt().toFloat(),
-                mMinCropResultHeight
+                mMinCropResultHeight,
             )
         }
 
-    /** Maximum width in pixels that the crop window can get.  */
+    /** Maximum width in pixels that the crop window can get. */
     val maxCropWidth: Float
         get() {
             val mMaxCropResultWidth = 99999f
             return min(mMaxCropWindowWidth, mMaxCropResultWidth)
         }
 
-    /** Maximum height in pixels that the crop window can get.  */
+    /** Maximum height in pixels that the crop window can get. */
     val maxCropHeight: Float
         get() {
             val mMaxCropResultHeight = 99999f
@@ -76,7 +75,8 @@ internal class CropWindowHandler {
         }
 
     /**
-     * Set the max width/height of the shown image to original image to scale the limits appropriately
+     * Set the max width/height of the shown image to original image to scale the limits
+     * appropriately
      */
     fun setCropWindowLimits(maxWidth: Float, maxHeight: Float) {
         mMaxCropWindowWidth = maxWidth
@@ -94,8 +94,8 @@ internal class CropWindowHandler {
     }
 
     /**
-     * Determines which, if any, of the handles are pressed given the touch coordinates, the bounding
-     * box, and the touch radius.
+     * Determines which, if any, of the handles are pressed given the touch coordinates, the
+     * bounding box, and the touch radius.
      *
      * @param x the x-coordinate of the touch point
      * @param y the y-coordinate of the touch point
@@ -106,10 +106,11 @@ internal class CropWindowHandler {
         val type = getRectanglePressedMoveType(x, y, targetRadius)
         return if (type != null) CropWindowMoveHandler(type, this, x, y) else null
     }
+
     // region: Private methods
     /**
-     * Determines which, if any, of the handles are pressed given the touch coordinates, the bounding
-     * box, and the touch radius.
+     * Determines which, if any, of the handles are pressed given the touch coordinates, the
+     * bounding box, and the touch radius.
      *
      * @param x the x-coordinate of the touch point
      * @param y the y-coordinate of the touch point
@@ -117,58 +118,45 @@ internal class CropWindowHandler {
      * @return the Handle that was pressed; null if no Handle was pressed
      */
     private fun getRectanglePressedMoveType(
-        x: Float, y: Float, targetRadius: Float
+        x: Float,
+        y: Float,
+        targetRadius: Float,
     ): CropWindowMoveHandler.Type? {
         var moveType: CropWindowMoveHandler.Type? = null
 
         // Note: corner-handles take precedence, then side-handles, then center.
         if (isInCornerTargetZone(x, y, mEdges.left, mEdges.top, targetRadius)) {
             moveType = CropWindowMoveHandler.Type.TOP_LEFT
-        } else if (isInCornerTargetZone(
-                x, y, mEdges.right, mEdges.top, targetRadius
-            )
-        ) {
+        } else if (isInCornerTargetZone(x, y, mEdges.right, mEdges.top, targetRadius)) {
             moveType = CropWindowMoveHandler.Type.TOP_RIGHT
-        } else if (isInCornerTargetZone(
-                x, y, mEdges.left, mEdges.bottom, targetRadius
-            )
-        ) {
+        } else if (isInCornerTargetZone(x, y, mEdges.left, mEdges.bottom, targetRadius)) {
             moveType = CropWindowMoveHandler.Type.BOTTOM_LEFT
-        } else if (isInCornerTargetZone(
-                x, y, mEdges.right, mEdges.bottom, targetRadius
-            )
-        ) {
+        } else if (isInCornerTargetZone(x, y, mEdges.right, mEdges.bottom, targetRadius)) {
             moveType = CropWindowMoveHandler.Type.BOTTOM_RIGHT
-        } else if (isInCenterTargetZone(
-                x, y, mEdges.left, mEdges.top, mEdges.right, mEdges.bottom
-            )
-            && focusCenter()
+        } else if (
+            isInCenterTargetZone(x, y, mEdges.left, mEdges.top, mEdges.right, mEdges.bottom) &&
+                focusCenter()
         ) {
             moveType = CropWindowMoveHandler.Type.CENTER
-        } else if (isInHorizontalTargetZone(
-                x, y, mEdges.left, mEdges.right, mEdges.top, targetRadius
-            )
+        } else if (
+            isInHorizontalTargetZone(x, y, mEdges.left, mEdges.right, mEdges.top, targetRadius)
         ) {
             moveType = CropWindowMoveHandler.Type.TOP
-        } else if (isInHorizontalTargetZone(
-                x, y, mEdges.left, mEdges.right, mEdges.bottom, targetRadius
-            )
+        } else if (
+            isInHorizontalTargetZone(x, y, mEdges.left, mEdges.right, mEdges.bottom, targetRadius)
         ) {
             moveType = CropWindowMoveHandler.Type.BOTTOM
-        } else if (isInVerticalTargetZone(
-                x, y, mEdges.left, mEdges.top, mEdges.bottom, targetRadius
-            )
+        } else if (
+            isInVerticalTargetZone(x, y, mEdges.left, mEdges.top, mEdges.bottom, targetRadius)
         ) {
             moveType = CropWindowMoveHandler.Type.LEFT
-        } else if (isInVerticalTargetZone(
-                x, y, mEdges.right, mEdges.top, mEdges.bottom, targetRadius
-            )
+        } else if (
+            isInVerticalTargetZone(x, y, mEdges.right, mEdges.top, mEdges.bottom, targetRadius)
         ) {
             moveType = CropWindowMoveHandler.Type.RIGHT
-        } else if (isInCenterTargetZone(
-                x, y, mEdges.left, mEdges.top, mEdges.right, mEdges.bottom
-            )
-            && !focusCenter()
+        } else if (
+            isInCenterTargetZone(x, y, mEdges.left, mEdges.top, mEdges.right, mEdges.bottom) &&
+                !focusCenter()
         ) {
             moveType = CropWindowMoveHandler.Type.CENTER
         }
@@ -177,12 +165,12 @@ internal class CropWindowHandler {
 
     /**
      * Determines if the cropper should focus on the center handle or the side handles. If it is a
-     * small image, focus on the center handle so the user can move it. If it is a large image, focus
-     * on the side handles so user can grab them. Corresponds to the appearance of the
+     * small image, focus on the center handle so the user can move it. If it is a large image,
+     * focus on the side handles so user can grab them. Corresponds to the appearance of the
      * RuleOfThirdsGuidelines.
      *
      * @return true if it is small enough such that it should focus on the center; less than
-     * show_guidelines limit
+     *   show_guidelines limit
      */
     private fun focusCenter(): Boolean = !showGuidelines()
 
@@ -200,13 +188,18 @@ internal class CropWindowHandler {
          * @return true if the touch point is in the target touch zone; false otherwise
          */
         private fun isInCornerTargetZone(
-            x: Float, y: Float, handleX: Float, handleY: Float, targetRadius: Float
+            x: Float,
+            y: Float,
+            handleX: Float,
+            handleY: Float,
+            targetRadius: Float,
         ): Boolean {
             return abs(x - handleX) <= targetRadius && abs(y - handleY) <= targetRadius
         }
 
         /**
-         * Determines if the specified coordinate is in the target touch zone for a horizontal bar handle.
+         * Determines if the specified coordinate is in the target touch zone for a horizontal bar
+         * handle.
          *
          * @param x the x-coordinate of the touch point
          * @param y the y-coordinate of the touch point
@@ -222,13 +215,14 @@ internal class CropWindowHandler {
             handleXStart: Float,
             handleXEnd: Float,
             handleY: Float,
-            targetRadius: Float
+            targetRadius: Float,
         ): Boolean {
             return x > handleXStart && x < handleXEnd && abs(y - handleY) <= targetRadius
         }
 
         /**
-         * Determines if the specified coordinate is in the target touch zone for a vertical bar handle.
+         * Determines if the specified coordinate is in the target touch zone for a vertical bar
+         * handle.
          *
          * @param x the x-coordinate of the touch point
          * @param y the y-coordinate of the touch point
@@ -244,7 +238,7 @@ internal class CropWindowHandler {
             handleX: Float,
             handleYStart: Float,
             handleYEnd: Float,
-            targetRadius: Float
+            targetRadius: Float,
         ): Boolean {
             return abs(x - handleX) <= targetRadius && y > handleYStart && y < handleYEnd
         }
@@ -261,7 +255,12 @@ internal class CropWindowHandler {
          * @return true if the touch point is inside the bounding rectangle; false otherwise
          */
         private fun isInCenterTargetZone(
-            x: Float, y: Float, left: Float, top: Float, right: Float, bottom: Float
+            x: Float,
+            y: Float,
+            left: Float,
+            top: Float,
+            right: Float,
+            bottom: Float,
         ): Boolean {
             return x > left && x < right && y > top && y < bottom
         }

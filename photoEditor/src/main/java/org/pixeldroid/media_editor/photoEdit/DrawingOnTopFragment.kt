@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import org.pixeldroid.media_editor.photoEdit.databinding.FragmentDrawingBinding
 
 class DrawingOnTopFragment : Fragment() {
@@ -13,30 +13,21 @@ class DrawingOnTopFragment : Fragment() {
     private lateinit var model: PhotoEditViewModel
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
     ): View {
         // Inflate the layout for this fragment
         binding = FragmentDrawingBinding.inflate(inflater, container, false)
 
-        val _model: PhotoEditViewModel by activityViewModels {
-            PhotoEditViewModelFactory()
-        }
+        val _model: PhotoEditViewModel by activityViewModels { PhotoEditViewModelFactory() }
         model = _model
 
-        binding.buttonDraw.setOnClickListener {
-            model.startDraw()
-        }
-        binding.buttonText.setOnClickListener {
-            model.startText()
-        }
-        binding.buttonStickers.setOnClickListener {
-            model.startStickers()
-        }
+        binding.buttonDraw.setOnClickListener { model.startDraw() }
+        binding.buttonText.setOnClickListener { model.startText() }
+        binding.buttonStickers.setOnClickListener { model.startStickers() }
 
-        binding.cropImageButton.setOnClickListener {
-            model.startCrop()
-        }
+        binding.cropImageButton.setOnClickListener { model.startCrop() }
 
         return binding.root
     }

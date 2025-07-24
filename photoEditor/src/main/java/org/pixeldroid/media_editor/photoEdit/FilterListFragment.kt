@@ -45,46 +45,46 @@ import org.pixeldroid.media_editor.photoEdit.imagine.layers.RandLayer
 import org.pixeldroid.media_editor.photoEdit.imagine.layers.SepiaLayer
 import org.pixeldroid.media_editor.photoEdit.imagine.layers.VintageLayer
 
-class FilterListFragment: Fragment() {
+class FilterListFragment : Fragment() {
     private lateinit var binding: FragmentFilterListBinding
 
     private lateinit var adapter: ThumbnailAdapter
 
     private lateinit var model: PhotoEditViewModel
 
-    private val predefinedLayers: List<ImagineLayer> = arrayListOf(
-        ElsaLayer(),
-        VintageLayer(),
-        MarsLayer(),
-        FrostLayer(),
-        SepiaLayer(),
-        BlackWhiteLayer(),
-        RandLayer(),
-        NegativeLayer()
-    )
+    private val predefinedLayers: List<ImagineLayer> =
+        arrayListOf(
+            ElsaLayer(),
+            VintageLayer(),
+            MarsLayer(),
+            FrostLayer(),
+            SepiaLayer(),
+            BlackWhiteLayer(),
+            RandLayer(),
+            NegativeLayer(),
+        )
 
     private var customLayers: List<CustomLayer> = emptyList()
 
     private val tbItemList: List<ImagineLayer>
         get() = predefinedLayers + customLayers
 
-
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
     ): View {
         // Inflate the layout for this fragment
         binding = FragmentFilterListBinding.inflate(inflater, container, false)
 
-        val _model: PhotoEditViewModel by activityViewModels {
-            PhotoEditViewModelFactory()
-        }
+        val _model: PhotoEditViewModel by activityViewModels { PhotoEditViewModelFactory() }
         model = _model
 
         val orientation = resources.configuration.orientation
-        binding.recyclerView.layoutManager = (if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            GridLayoutManager(activity, 2)
-        } else LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false))
+        binding.recyclerView.layoutManager =
+            (if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                GridLayoutManager(activity, 2)
+            } else LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false))
 
         adapter = ThumbnailAdapter(requireActivity(), listOf(null) + tbItemList, this)
         binding.recyclerView.adapter = adapter
@@ -94,23 +94,24 @@ class FilterListFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val thumbnailImagineEngine = ImagineEngine(binding.thumbnailImagine).apply {
-            imageProvider =
-                model.imageUri?.let { UriImageProvider(requireContext(), it) }
-        }
+        val thumbnailImagineEngine =
+            ImagineEngine(binding.thumbnailImagine).apply {
+                imageProvider = model.imageUri?.let { UriImageProvider(requireContext(), it) }
+            }
         val onThumbnails = { list: List<Bitmap?> ->
             adapter.thumbnails = list
-            if (list.any {it == null}) (context as? AppCompatActivity)?.runOnUiThread {
-                Snackbar.make(
-                    binding.root, R.string.filter_error, Snackbar.LENGTH_LONG
-                ).setAction(R.string.view_log, launchLogView(requireContext())).show()
-            }
+            if (list.any { it == null })
+                (context as? AppCompatActivity)?.runOnUiThread {
+                    Snackbar.make(binding.root, R.string.filter_error, Snackbar.LENGTH_LONG)
+                        .setAction(R.string.view_log, launchLogView(requireContext()))
+                        .show()
+                }
         }
 
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 val db = DatabaseBuilder.getInstance(requireContext())
-                //FIXME remove this horrible hack if race condition/init problem fixed
+                // FIXME remove this horrible hack if race condition/init problem fixed
                 do {
                     db.filtersDao().getAll().firstOrNull()?.let { filters ->
                         customLayers = filters.map { it.toLayer() }
@@ -119,22 +120,22 @@ class FilterListFragment: Fragment() {
                             true,
                             50.dpToPx(requireContext()),
                             tbItemList,
-                            onThumbnails
+                            onThumbnails,
                         )
                     }
                     delay(300)
                 } while (adapter.thumbnails.all { it == null })
-                db.filtersDao().getAll().distinctUntilChanged().drop(1)
-                    .collect { filters: List<CustomFilter> ->
-                        customLayers = filters.map { it.toLayer() }
-                        adapter.tbItemList = listOf(null) + tbItemList
-                        thumbnailImagineEngine.exportBitmap(
-                            true,
-                            50.dpToPx(requireContext()),
-                            tbItemList,
-                            onThumbnails
-                        )
-                    }
+                db.filtersDao().getAll().distinctUntilChanged().drop(1).collect {
+                    filters: List<CustomFilter> ->
+                    customLayers = filters.map { it.toLayer() }
+                    adapter.tbItemList = listOf(null) + tbItemList
+                    thumbnailImagineEngine.exportBitmap(
+                        true,
+                        50.dpToPx(requireContext()),
+                        tbItemList,
+                        onThumbnails,
+                    )
+                }
             }
         }
     }
@@ -144,7 +145,9 @@ class FilterListFragment: Fragment() {
     }
 
     enum class FilterType {
-        New, Edit, ViewOnly
+        New,
+        Edit,
+        ViewOnly,
     }
 
     fun onFilterSelected(index: Int, longClick: Boolean = false) {
@@ -154,9 +157,9 @@ class FilterListFragment: Fragment() {
         } else if (longClick) {
             // Long click, modify the corresponding (if any) custom filter or show built-in one
             val layer = tbItemList.getOrNull(index - 1)
-            showCustomFilterDialog(layer,
-                if (layer is CustomLayer) FilterType.Edit
-                else FilterType.ViewOnly
+            showCustomFilterDialog(
+                layer,
+                if (layer is CustomLayer) FilterType.Edit else FilterType.ViewOnly,
             )
         }
         // In other cases, just invoke the listener
@@ -167,8 +170,7 @@ class FilterListFragment: Fragment() {
         // Hack to make sure the callback isn't triggered by itself changing the text
         var changed = false
         val textWatcher: TextWatcher = doAfterTextChanged {
-            @Suppress("KotlinConstantConditions")
-            if (changed) return@doAfterTextChanged
+            @Suppress("KotlinConstantConditions") if (changed) return@doAfterTextChanged
             changed = true
             setText(originalText)
             changed = false
@@ -177,58 +179,57 @@ class FilterListFragment: Fragment() {
     }
 
     private fun showCustomFilterDialog(modifyLayer: ImagineLayer?, type: FilterType) {
-        if(type != FilterType.New && modifyLayer == null) return
+        if (type != FilterType.New && modifyLayer == null) return
 
         val customFilterBinding = DialogCustomFilterBinding.inflate(layoutInflater)
 
         modifyLayer?.let {
-            val name = when (type) {
-                FilterType.ViewOnly -> it.name?.let { id -> getString(id) } ?: ""
-                else -> it.customName
-            }
+            val name =
+                when (type) {
+                    FilterType.ViewOnly -> it.name?.let { id -> getString(id) } ?: ""
+                    else -> it.customName
+                }
             customFilterBinding.customFilterTitle.editText?.setText(name)
             customFilterBinding.customFilterShader.editText?.setText(it.source)
         }
 
-        if (type == FilterType.ViewOnly){
+        if (type == FilterType.ViewOnly) {
             customFilterBinding.customFilterTitleEditText.setReadOnly(getText(modifyLayer?.name!!))
             customFilterBinding.customFilterShaderEditText.setReadOnly(modifyLayer.source)
         }
 
-        val dialogBuilder: MaterialAlertDialogBuilder = MaterialAlertDialogBuilder(requireContext())
-            .setTitle(
-                getString(
-                    when (type) {
-                        FilterType.New -> R.string.create_custom_filter
-                        FilterType.Edit -> R.string.edit_custom_filter
-                        FilterType.ViewOnly -> R.string.view_filter
-                    }
+        val dialogBuilder: MaterialAlertDialogBuilder =
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle(
+                    getString(
+                        when (type) {
+                            FilterType.New -> R.string.create_custom_filter
+                            FilterType.Edit -> R.string.edit_custom_filter
+                            FilterType.ViewOnly -> R.string.view_filter
+                        }
+                    )
                 )
-            )
-            .setPositiveButton(android.R.string.ok) { _, _ ->
-                val title =
-                    customFilterBinding.customFilterTitle.editText?.text?.toString()?.ifEmpty {
-                        getString(
-                            R.string.custom_filter
-                        )
-                    }
-                        ?: getString(R.string.custom_filter)
-                val code = customFilterBinding.customFilterShader.editText?.text?.toString() ?: ""
+                .setPositiveButton(android.R.string.ok) { _, _ ->
+                    val title =
+                        customFilterBinding.customFilterTitle.editText?.text?.toString()?.ifEmpty {
+                            getString(R.string.custom_filter)
+                        } ?: getString(R.string.custom_filter)
+                    val code =
+                        customFilterBinding.customFilterShader.editText?.text?.toString() ?: ""
 
-                when (type) {
-                    FilterType.ViewOnly -> return@setPositiveButton
-                    else -> {
-                        val db = DatabaseBuilder.getInstance(requireContext())
-                        lifecycleScope.launch(Dispatchers.IO) {
-                            (modifyLayer as? CustomLayer).let {
-                                db.filtersDao().insertOrUpdate(
-                                    CustomFilter(title, code, it?.uid ?: 0)
-                                )
+                    when (type) {
+                        FilterType.ViewOnly -> return@setPositiveButton
+                        else -> {
+                            val db = DatabaseBuilder.getInstance(requireContext())
+                            lifecycleScope.launch(Dispatchers.IO) {
+                                (modifyLayer as? CustomLayer).let {
+                                    db.filtersDao()
+                                        .insertOrUpdate(CustomFilter(title, code, it?.uid ?: 0))
+                                }
                             }
                         }
                     }
                 }
-            }
         if (type != FilterType.ViewOnly) {
             dialogBuilder.setNeutralButton(android.R.string.cancel) { dialog, _ ->
                 dialog.dismiss()
@@ -236,12 +237,10 @@ class FilterListFragment: Fragment() {
         }
 
         if (type == FilterType.Edit) {
-            dialogBuilder.setNegativeButtonIcon(
-                AppCompatResources.getDrawable(
-                    requireContext(),
-                    R.drawable.delete
+            dialogBuilder
+                .setNegativeButtonIcon(
+                    AppCompatResources.getDrawable(requireContext(), R.drawable.delete)
                 )
-            )
                 .setNegativeButton(R.string.delete) { _, _ ->
                     val db = DatabaseBuilder.getInstance(requireContext())
                     lifecycleScope.launch(Dispatchers.IO) {

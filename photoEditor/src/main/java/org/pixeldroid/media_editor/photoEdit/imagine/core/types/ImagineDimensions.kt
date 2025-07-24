@@ -6,24 +6,17 @@ package org.pixeldroid.media_editor.photoEdit.imagine.core.types
  * @property width The horizontal dimension in pixels
  * @property height The vertical dimension in pixels
  */
-internal data class ImagineDimensions(
-    val width: Int,
-    val height: Int
-) {
+internal data class ImagineDimensions(val width: Int, val height: Int) {
 
-    /**
-     * The ratio between the width and the height
-     */
+    /** The ratio between the width and the height */
     val aspectRatio: Float
         get() = width.toFloat() / height
 
     /**
-     * Scales the dimensions to fit into the given dimensions while
-     * maintaining the aspect ratio
+     * Scales the dimensions to fit into the given dimensions while maintaining the aspect ratio
      *
      * @param containerWidth The width in pixels of the container
      * @param containerHeight The height in pixels of the container
-     *
      * @return A scaled [ImagineDimensions]
      */
     fun fitInside(containerWidth: Int, containerHeight: Int): ImagineDimensions {
@@ -34,23 +27,14 @@ internal data class ImagineDimensions(
         val containerAspectRatio = containerWidth.toFloat() / containerHeight
 
         return if (containerAspectRatio > aspectRatio)
-            ImagineDimensions(
-                (width.toFloat() * containerHeight / height).toInt(),
-                containerHeight
-            )
-        else
-            ImagineDimensions(
-                containerWidth,
-                (height.toFloat() * containerWidth / width).toInt()
-            )
+            ImagineDimensions((width.toFloat() * containerHeight / height).toInt(), containerHeight)
+        else ImagineDimensions(containerWidth, (height.toFloat() * containerWidth / width).toInt())
     }
 
     /**
-     * Scales the dimensions to fit into the given dimensions while
-     * maintaining the aspect ratio
+     * Scales the dimensions to fit into the given dimensions while maintaining the aspect ratio
      *
      * @param container The [ImagineDimensions] of the container
-     *
      * @return A scaled [ImagineDimensions]
      */
     fun fitInside(container: ImagineDimensions): ImagineDimensions {
@@ -60,5 +44,4 @@ internal data class ImagineDimensions(
     override fun toString(): String {
         return "${width}x${height}"
     }
-
 }

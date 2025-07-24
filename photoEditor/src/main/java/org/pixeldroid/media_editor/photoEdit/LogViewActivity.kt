@@ -6,14 +6,14 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import org.pixeldroid.media_editor.photoEdit.databinding.ActivityLogviewBinding
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileWriter
 import java.io.IOException
 import java.io.InputStreamReader
+import org.pixeldroid.media_editor.photoEdit.databinding.ActivityLogviewBinding
 
-class LogViewActivity: AppCompatActivity() {
+class LogViewActivity : AppCompatActivity() {
     companion object {
         private var logFile: File? = null
 
@@ -27,10 +27,11 @@ class LogViewActivity: AppCompatActivity() {
             logFile?.delete()
         }
 
-        fun launchLogView(context: Context) = View.OnClickListener {
-            val intent = Intent(context, LogViewActivity::class.java)
-            context.startActivity(intent)
-        }
+        fun launchLogView(context: Context) =
+            View.OnClickListener {
+                val intent = Intent(context, LogViewActivity::class.java)
+                context.startActivity(intent)
+            }
 
         fun appendToLogFile(tag: String, text: String) {
             Log.e(tag, text)
@@ -45,6 +46,7 @@ class LogViewActivity: AppCompatActivity() {
             }
         }
     }
+
     private lateinit var binding: ActivityLogviewBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,7 +75,13 @@ class LogViewActivity: AppCompatActivity() {
                     sb.append(line).append("\n")
                 }
                 reader.close()
-                binding.webView.loadDataWithBaseURL(null, sb.toString(), "text/plain", "utf-8", null)
+                binding.webView.loadDataWithBaseURL(
+                    null,
+                    sb.toString(),
+                    "text/plain",
+                    "utf-8",
+                    null,
+                )
             }
         } catch (e: Exception) {
             e.printStackTrace()
