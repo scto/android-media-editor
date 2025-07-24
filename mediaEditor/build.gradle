@@ -34,17 +34,16 @@ android {
 }
 
 dependencies {
-
     implementation 'androidx.core:core-ktx:1.12.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.11.0'
 
-    //implementation 'info.androidhive:imagefilters:1.0.7'
-	//compile 'net.alhazmy13.ImageFilters:library:0.1.2-beta'
-    implementation 'net.alhazmy13.ImageFilters:library:0.1.2-beta'
+    //implementation('info.androidhive:imagefilters:1.0.7')
+    //compile 'net.alhazmy13.ImageFilters:library:0.1.2-beta'
+    implementation('net.alhazmy13.ImageFilters:library:0.1.2-beta')
     
     //implementation 'com.github.yalantis:ucrop:2.2.8-native'
-    implementation 'com.yalantis:ucrop:2.2.8-native'
+    implementation('com.yalantis:ucrop:2.2.8-native')
     //Source: https://yalantis.com/blog/introducing-ucrop-our-own-image-cropping-library-for-android/
     //compile 'com.yalantis:ucrop:2.2.8-native'
     
@@ -56,9 +55,11 @@ dependencies {
     implementation 'androidx.media2:media2-widget:1.2.1'
     implementation 'androidx.media2:media2-player:1.2.1'
     implementation "androidx.recyclerview:recyclerview:1.3.2"
-    implementation 'com.arthenica:ffmpeg-kit-min-gpl:6.0-2.LTS'
+
+    // https://mvnrepository.com/artifact/com.arthenica/ffmpeg-kit-min-gpl
+    implementation('com.arthenica:ffmpeg-kit-min-gpl:6.0-2.LTS')
+    
     implementation('com.github.bumptech.glide:glide:4.16.0') {
         exclude group: "com.android.support"
     }
-
 }
