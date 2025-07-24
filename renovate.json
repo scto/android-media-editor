@@ -5,7 +5,7 @@
     ":dependencyDashboard"
   ],
   "baseBranches": [
-    "addToolbar"
+    "master"
   ],
   "forkProcessing": "enabled",
   "automerge": false,
