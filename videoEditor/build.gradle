@@ -73,8 +73,9 @@ dependencies {
     // https://mvnrepository.com/artifact/com.arthenica/ffmpeg-kit-min-gpl
     //implementation 'com.arthenica:ffmpeg-kit-min-gpl:6.0-2.LTS'
     // https://mvnrepository.com/artifact/com.arthenica/ffmpeg-kit-min-gpl
-    implementation("com.arthenica:ffmpeg-kit-min-gpl:6.0-2")
-
+    //implementation("com.arthenica:ffmpeg-kit-min-gpl:6.0-2")
+    implementation("com.mrljdx:ffmpeg-kit-full:6.1.4")
+    
     implementation('com.github.bumptech.glide:glide:4.16.0') {
         exclude group: "com.android.support"
     }
