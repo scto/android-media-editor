@@ -52,8 +52,9 @@ dependencies {
     implementation 'com.google.android.material:material:1.12.0'
     implementation platform('org.jetbrains.kotlin:kotlin-bom:2.1.0')
 
-    implementation 'com.github.yalantis:ucrop:2.2.8-native'
-
+    //implementation 'com.github.yalantis:ucrop:2.2.8-native'
+    implementation 'com.yalantis:ucrop:2.2.8-native'
+    
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.8.7'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-savedstate:2.8.7'
