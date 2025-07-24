@@ -3,8 +3,7 @@ name: Code Formatter
 on:
   push:
     branches:
-      - main
-      - d
+      - master
     paths-ignore:
       - '**/*.md'
   schedule:
@@ -36,12 +35,14 @@ jobs:
 
       - name: Commit and Push changes to branch master
         run: |
+          rm ktfmt.jar
           git config --global user.name "scto"
           git config --global user.email "tschmid35@gmail.com"
+          git fetch origin ${GITHUB_REF_NAME}:temp
           git add .
-          git commit -m "chore: Format Code on branch master" -m "fornat code with ktfmt with github actions"
-          git branch -M main
-          git push origin main
+          git commit -m "chore: Format Kotlin Code" -m "format code with kfmt in github actions"
+          git rebase temp
+          git push origin HEAD:${GITHUB_REF_NAME}
         env:
           TOKEN: ${{ github.token }} # ${{ secrets.SUPER_TOKEN }}
         continue-on-error: true
