@@ -12,12 +12,15 @@ plugins {
     id 'com.google.devtools.ksp'
 }
 */
+
 subprojects {
     // Apply maven-publish plugin to all the sub-projects so that jitpack will make a publication
     apply plugin: 'maven-publish'
 }
 
+/*
 android {
     namespace 'org.pixeldroid.media_editor'
     compileSdk 35
 }
+*/
