@@ -11,6 +11,5 @@
     "automerge": false,
     "automergeType": "pr",
     "platformAutomerge": false
-  },
-  "includeForks": true
+  }
 }
