@@ -61,7 +61,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-savedstate:2.8.7'
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.8.7"
-    implementation "androidx.lifecycle:lifecycle-common-java8:2.8.7"
+    implementation "androidx.lifecycle:lifecycle-common-java8:2.9.2"
     implementation "androidx.recyclerview:recyclerview:1.4.0"
 
     //Video editor dependencies
